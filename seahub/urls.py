@@ -64,6 +64,7 @@ from seahub.api2.endpoints.wikis import WikisView, WikiView
 from seahub.api2.endpoints.wiki_pages import WikiPageView, WikiPagesView
 from seahub.api2.endpoints.revision_tag import TaggedItemsView, TagNamesView
 from seahub.api2.endpoints.user import User
+from seahub.api2.endpoints.starred_items import StarredItems
 
 # Admin
 from seahub.api2.endpoints.admin.revision_tag import AdminTaggedItemsView
@@ -282,6 +283,9 @@ urlpatterns = [
 
     ## user::avatar
     url(r'^api/v2.1/user-avatar/$', UserAvatarView.as_view(), name='api-v2.1-user-avatar'),
+
+    ## user::starred-item
+    url(r'^api/v2.1/starred-items/$', StarredItems.as_view(), name='api-v2.1-starred-items'),
 
     ## user::wiki
     url(r'^api/v2.1/wikis/$', WikisView.as_view(), name='api-v2.1-wikis'),
