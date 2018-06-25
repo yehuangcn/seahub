@@ -12,6 +12,8 @@ from seaserv import seafile_api, ccnet_api
 from pysearpc import SearpcError
 
 from seahub.base.accounts import User
+from seahub.base.templatetags.seahub_tags import email2nickname, \
+    email2contact_email
 from seahub.utils import is_valid_username, is_pro_version
 from seahub.utils.timeutils import timestamp_to_isoformat_timestr
 from seahub.group.utils import is_group_member, is_group_admin, \
@@ -31,6 +33,8 @@ def get_group_info(group_id):
         "id": group.id,
         "name": group.group_name,
         "owner": group.creator_name,
+        "owner_name": email2nickname(group.creator_name),
+        "owner_contact_email": email2contact_email(group.creator_name),
         "created_at": isoformat_timestr,
     }
 

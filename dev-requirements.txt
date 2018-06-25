@@ -3,3 +3,4 @@
 fabric
 transifex-client
 mysqlclient==1.3.12
+flake8==2.5.0
