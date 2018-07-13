@@ -14,7 +14,7 @@ from seahub.api2.throttling import UserRateThrottle
 from seahub.api2.authentication import TokenAuthentication
 from seahub.api2.utils import api_error
 from seahub.api2.endpoints.utils import generate_links_header_for_paginator
-from seahub.utils import get_file_history
+from seahub.utils import get_file_history, get_site_scheme_and_netloc
 from seahub.utils.timeutils import datetime_to_isoformat_timestr, timestamp_to_isoformat_timestr
 from seahub.utils.file_revisions import get_file_revisions_within_limit
 from seahub.views import check_folder_permission
@@ -202,9 +202,9 @@ class NewFileHistoryView(APIView):
             }
 
         resp = Response(result)
-        base_url = reverse('api-v2.1-new-file-history-view', args=[repo_id])
+        base_url = get_site_scheme_and_netloc() + reverse('api-v2.1-new-file-history-view', args=[repo_id])
         links_header = generate_links_header_for_paginator(base_url, page,
-                                                           per_page, total_count)
+                                                           per_page, total_count, option_dict={'path': path})
         resp['Links'] = links_header
 
         return resp

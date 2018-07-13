@@ -199,10 +199,10 @@
 .sf2-icon-upload:before { content: "\e034"; }
 
 /******* tags **********/
-html, body {
-    height:100%;
-    overflow:hidden;
-}
+/* html, body { */
+/*     height:100%; */
+/*     overflow:hidden; */
+/* } */
 body,
 ul,ol,li,dl,dt,dd,
 pre,blockquote,

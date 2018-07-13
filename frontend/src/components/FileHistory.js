@@ -3,6 +3,7 @@ import { gettext as _, siteRoot, lang, getUrl } from '../globals';
 import Moment from 'react-moment';
 import filesize from 'filesize';
 import PropTypes from 'prop-types';
+import { compose } from 'recompose';
 
 const PER_PAGE = 25;
 const REPO_ID = window.app.pageOptions.repoID;
@@ -12,6 +13,7 @@ const applySetResult = (result) => (prevState) => ({
   data: result.data,
   page: result.page,
   isLoading: false,
+  isError: false,
   hasMore: result.data && result.data.length === PER_PAGE,
 });
 
@@ -19,6 +21,7 @@ const applyUpdateResult = (result) => (prevState) => ({
   data: [...prevState.data, ...result.data],
   page: result.page,
   isLoading: false,
+  isError: false,
   hasMore: result.data && result.data.length === PER_PAGE,
 });
 
@@ -34,7 +37,8 @@ class FileHistory extends React.Component {
       data: [],
       page: null,
       isLoading: true,
-      hasMore: false
+      isError: false,
+      hasMore: true,
     };
   }
 
@@ -58,6 +62,10 @@ class FileHistory extends React.Component {
   }
 
   onHandleErrors = (error) => {
+    this.setState({
+      isLoading: false,
+      isError: true,
+    });
     alert(error);               // TODO: better error message
     return;
   }
@@ -81,20 +89,14 @@ class FileHistory extends React.Component {
           repoName={window.app.pageOptions.repoName}
           filePath={FILE_PATH} />
 
-        <Table
+        <TableWithInfinite
           data={this.state.data}
-          onPaginatedGet={this.onPaginatedGet}
+          loadMore={this.onPaginatedGet}
           isLoading={this.state.isLoading}
+          isError={this.state.isError}
           hasMore={this.state.hasMore}
-          page={this.state.page} />
-
-        {
-          (this.state.page !== null && this.state.hasMore) &&
-            <LoadMoreIndicator
-              onPaginatedGet={this.onPaginatedGet}
-              isLoading={this.state.isLoading}
-            />
-        }
+          page={this.state.page}
+          />
 
       </div>
     );
@@ -198,18 +200,15 @@ Breadcrumb.propTypes = {
   filePath: PropTypes.string.isRequired,
 };
 
-const LoadMoreIndicator = ({ isLoading, onPaginatedGet }) => (
-  <div id="history-more">
-    { isLoading &&
-    <div id="history-more-loading">
-      <span className="loading-icon loading-tip"></span>
-    </div>
-    }
+const LoadingIndicator = () =>
+  <div id="history-more-loading">
+    <span className="loading-icon loading-tip"></span>
+  </div>;
 
-    <button id="history-more-btn" onClick={onPaginatedGet} className="full-width-btn">{_('More')}</button>
-  </div>
-);
-
+const InfiniteScrollErrorIndicator = ({ onClick=f=>f }) =>
+  <div id="history-more" className="interactions">
+    <button id="history-more-btn" onClick={onClick} className="full-width-btn">{_('Something went wrong. Try Again.')}</button>
+  </div>;
 
 // HoC
 const withHover = (Component) => (
@@ -238,6 +237,138 @@ const withHover = (Component) => (
   }
 );
 
+const withInfiniteScroll = (Component) =>
+  class WithInfiniteScroll extends React.Component {
+
+  static propTypes = {
+    isLoading: PropTypes.bool.isRequired,
+    isError: PropTypes.bool.isRequired,
+    hasMore: PropTypes.bool.isRequired,
+    loadMore: PropTypes.func.isRequired,
+    useCapture: PropTypes.bool,
+    threshold: PropTypes.number,
+  };
+
+  static defaultProps = {
+    isLoading: true,
+    hasMore: true,
+    isError: false,
+    ref: null,
+    threshold: 250,             // pixels
+    useCapture: false,
+  };
+    
+  constructor(props) {
+    super(props);
+
+    this.scrollListener = this.scrollListener.bind(this);
+  }
+    
+  componentDidMount() {
+    this.attachScrollListener();
+  }
+
+  componentDidUpdate() {
+    this.attachScrollListener();
+  }
+
+  componentWillUnmount() {
+    this.detachScrollListener();
+    this.detachMousewheelListener();
+  }
+
+  detachMousewheelListener() {
+    window.removeEventListener(
+      'mousewheel',
+      this.mousewheelListener,
+      this.props.useCapture,
+    );
+  }
+
+  detachScrollListener() {
+    window.removeEventListener(
+      'scroll',
+      this.scrollListener,
+      this.props.useCapture,
+    );
+    window.removeEventListener(
+      'resize',
+      this.scrollListener,
+      this.props.useCapture,
+    );
+  }
+    
+  attachScrollListener() {
+    window.addEventListener(
+      'mousewheel',             // workaround for Chrome hangups
+      this.mousewheelListener,
+      this.props.useCapture,
+    );
+    window.addEventListener(
+      'scroll',
+      this.scrollListener,
+      this.props.useCapture,
+    );
+    window.addEventListener(
+      'resize',
+      this.scrollListener,
+      this.props.useCapture,
+    );
+
+    // initial load
+    this.scrollListener();
+  }
+
+  mousewheelListener(e) {
+    // Prevents Chrome hangups
+    // See: https://stackoverflow.com/questions/47524205/random-high-content-download-time-in-chrome/47684257#47684257
+    if (e.deltaY === 1) {
+      e.preventDefault();
+    }
+  }
+
+  scrollListener() {
+    const scrollEl = window;
+
+    const doc =
+        document.documentElement || document.body.parentNode || document.body;
+    const scrollTop =
+        scrollEl.pageYOffset !== undefined
+          ? scrollEl.pageYOffset
+          : doc.scrollTop;
+
+    const offset = (doc.offsetHeight - scrollTop - window.innerHeight);
+    if (offset < Number(this.props.threshold)) {
+      this.detachScrollListener();
+      // Call loadMore after detachScrollListener to allow for non-async loadMore functions
+      if (this.props.hasMore && !this.props.isLoading && !this.props.isError) {
+        this.props.loadMore();
+      }
+
+    }
+  }
+
+  render() {
+    return <div>
+      <Component {...this.props} />
+
+      { this.props.isLoading && <LoadingIndicator /> }
+
+      { (!this.props.isLoading && this.props.isError) &&
+        <InfiniteScrollErrorIndicator onClick={this.props.loadMore} />
+      }
+    </div>;
+  }
+  };
+
+
+const TableWithInfinite = compose(
+  withInfiniteScroll,
+)(Table);
+
 const TableRowWithHover = withHover(TableRow);
 
 export default FileHistory;
+
+
+
