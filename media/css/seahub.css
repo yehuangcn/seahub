@@ -4406,6 +4406,7 @@ img.thumbnail {
 
 .wiki-list input {
     width: 15rem;
+
 }
 
 .user-select-no {
@@ -4420,4 +4421,9 @@ img.thumbnail {
 #new-wiki-by-existing-form .repo-container {
     max-height: 20rem;
     overflow-y: auto;
+}
+
+.side-nav-footer .item {
+  margin-right:0;
+  margin-left:10px;
 }
