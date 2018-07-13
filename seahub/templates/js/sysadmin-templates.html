@@ -890,7 +890,7 @@
         <% } %>
     </td>
     <td><%- formatted_size %></td>
-    <td><a href="{{ SITE_ROOT }}useradmin/info/<% print(encodeURIComponent(shared_by)); %>/"><%- shared_by %></a></td>
+    <td><a href="{{ SITE_ROOT }}useradmin/info/<% print(encodeURIComponent(shared_by)); %>/"><%- shared_by_name %></a></td>
     <td>
         <a href="#" class="sf2-icon-delete sf2-x repo-unshare-btn op-icon vh" title="{% trans "Unshare" %}" aria-label="{% trans "Unshare" %}"></a>
     </td>
@@ -913,6 +913,35 @@
     <div class="empty-tips hide">
         <h2 class="alc">{% trans "No members" %}</h2>
     </div>
+</script>
+
+<script type="text/template" id="group-member-item-tmpl">
+    <td><img src="<%= avatar_url %>" alt="" width="20" class="avatar" /></td>
+    <td><a href="{{ SITE_ROOT }}useradmin/info/<% print(encodeURIComponent(email)); %>/"><%- name %></a></td>
+    <td>
+        <% if (role == 'Owner') { %>
+        <span class="cur-role">{% trans "Owner" %}</span>
+        <% } else if (role == 'Admin') { %>
+        <span class="cur-role">{% trans "Admin" %}</span>
+        <span title="{% trans "Edit" %}" class="user-role-edit-icon sf2-icon-edit op-icon vh"></span>
+        <select name="role" class="user-role-select hide">
+            <option value="0">{% trans "Member" %}</option>
+            <option value="1" selected="selected">{% trans "Admin" %}</option>
+        </select>
+        <% } else if (role == 'Member') { %>
+        <span class="cur-role">{% trans "Member" %}</span>
+        <span title="{% trans "Edit" %}" class="user-role-edit-icon sf2-icon-edit op-icon vh"></span>
+        <select name="role" class="user-role-select hide">
+            <option value="0" selected="selected">{% trans "Member" %}</option>
+            <option value="1">{% trans "Admin" %}</option>
+        </select>
+        <% } %>
+    </td>
+    <td>
+        <% if (role != 'Owner') { %>
+        <a href="#" class="sf2-icon-delete sf2-x member-delete-btn op-icon vh" title="{% trans "Delete" %}" aria-label="{% trans "Delete" %}"></a>
+        <% } %>
+    </td>
 </script>
 
 <script type="text/template" id="admin-operation-logs-tmpl">
