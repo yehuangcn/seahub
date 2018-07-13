@@ -33,7 +33,9 @@ module.exports = {
   // These are the "entry points" to our application.
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
-  entry: [
+  entry: {
+
+    index: [
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
     // Include an alternative client for WebpackDevServer. A client's job is to
@@ -52,19 +54,28 @@ module.exports = {
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
-  ],
+    ],
+
+    fileHistory: [
+      require.resolve('./polyfills'),
+      require.resolve('webpack-dev-server/client') + '?http://192.168.99.100:3000',
+      require.resolve('webpack/hot/dev-server'),
+      paths.appSrc + "/fileHistory.js",
+    ],
+
+  },
   output: {
     // Add /* filename */ comments to generated require()s in the output.
     pathinfo: true,
     // This does not produce a real file. It's just the virtual path that is
     // served by WebpackDevServer in development. This is the JS bundle
     // containing code from all our entry points, and the Webpack runtime.
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     // There are also additional JS chunk files if you use code splitting.
     chunkFilename: 'static/js/[name].chunk.js',
     // This is the URL that app is served from. We use "/" in development.
     // Tell django to use this URL to load packages and not use STATIC_URL + bundle_name
-    publicPath: 'http://192.168.49.130:3000/assets/bundles/', 
+    publicPath: 'http://192.168.99.100:3000/assets/bundles/',
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
@@ -246,7 +257,7 @@ module.exports = {
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 
-    new BundleTracker({filename: './webpack-stats.pro.json'}),
+    new BundleTracker({filename: './webpack-stats.dev.json'}),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

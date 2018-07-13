@@ -197,6 +197,7 @@ class NewFileHistoryView(APIView):
         data = [get_new_file_history_info(ent, avatar_size) for ent in file_revisions]
         result = {
             "data": data,
+            "page": page,
             "total_count": total_count
             }
 
