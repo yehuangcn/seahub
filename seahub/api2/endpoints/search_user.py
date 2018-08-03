@@ -70,14 +70,14 @@ class SearchUser(APIView):
             # users.query
             users = AlibabaProfile.objects.filter(work_status='A').filter(
                     Q(emp_name__icontains=q) | Q(pinyin_name=q) | Q(work_no=q) | \
-                    Q(nick_name__icontains=q) | Q(pinyin_nick=q)).order_by('dept_name')
+                    Q(nick_name__icontains=q) | Q(pinyin_nick=q)).order_by('dept_name')[:50]
 
             sorted_users = sorted(users,
                     key=lambda user: len(user.dept_name.split('-')), reverse=True)
         else:
             users = AlibabaProfile.objects.filter(work_status='A').filter(
                     Q(emp_name__icontains=q) | Q(pinyin_name=q) | Q(work_no=q) | \
-                    Q(nick_name__icontains=q) | Q(pinyin_nick=q))
+                    Q(nick_name__icontains=q) | Q(pinyin_nick=q))[:50]
 
             # current user's dept is "A-B-C-D"
             current_user_dept_name = current_user_profile.dept_name
