@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'moment',
     'common'
-], function($, _, Backbone, Common) {
+], function($, _, Backbone, Moment, Common) {
     'use strict';
 
     var View = Backbone.View.extend({
@@ -35,8 +36,21 @@ define([
         update: function(part_data) {
             if (part_data.error) {
                 this.$('#file-count').html('<span class="error">' + gettext("Error") + '</span>');
+                this.$('#owner-chain').html('<span class="error">' + gettext("Error") + '</span>');
             } else {
                 this.$('#file-count').html(part_data.file_count);
+
+                var owner_chain, time, user, html;
+                owner_chain = part_data.owner_chain;
+                html = ''
+
+                for (var i = 0, len = owner_chain.length; i < len; i++) {
+                    time = Common.getRelativeTimeStr(Moment(owner_chain[i].time));
+                    user = owner_chain[i].to_user_name;
+                    html += '<li style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:2;"><span title="'+time+'">'+user+'</span></li>';
+                }
+                this.$('#owner-chain').html('<ul>' + html + '</ul>');
+                this.$('#owner-chain').closest('tr').children().css('vertical-align','top')
             }
         },
 

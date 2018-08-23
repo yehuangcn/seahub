@@ -360,7 +360,8 @@ define([
                 dataType: 'json',
                 success: function(data) {
                     detailsView.update({
-                        'file_count': data.file_count
+                        'file_count': data.file_count,
+                        'owner_chain': data.owner_chain
                     });
                 },
                 error: function() {

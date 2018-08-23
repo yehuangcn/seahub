@@ -14,7 +14,9 @@ from seahub.api2.utils import api_error
 from seahub.base.templatetags.seahub_tags import email2nickname, \
         email2contact_email
 from seahub.utils import is_org_context
+from seahub.utils.timeutils import datetime_to_isoformat_timestr
 from seahub.views import check_folder_permission
+from seahub.alibaba.models import AlibabaProfile, AlibabaRepoOwnerChain
 
 from seaserv import seafile_api
 
@@ -50,6 +52,54 @@ class RepoView(APIView):
         else:
             repo_owner = seafile_api.get_repo_owner(repo_id)
 
+        # get repo owner chain info
+        owner_chain = []
+        chains = AlibabaRepoOwnerChain.objects.get_repo_owner_chain(repo_id)
+        for item in chains:
+
+            operator = item.operator
+            operator_alibaba_profile = AlibabaProfile.objects.get_profile(operator)
+
+            from_user = item.from_user
+            from_alibaba_profile = AlibabaProfile.objects.get_profile(from_user)
+
+            to_user = item.to_user
+            to_alibaba_profile = AlibabaProfile.objects.get_profile(to_user)
+
+            info = {
+                "time": datetime_to_isoformat_timestr(item.timestamp),
+                "operation": item.operation,
+
+                "operator": item.operator,
+                "operator_name": email2nickname(operator),
+                "operator_work_no": operator_alibaba_profile.work_no,
+
+                "from_user": from_user,
+                "from_user_name": email2nickname(from_user),
+                "from_user_work_no": from_alibaba_profile.work_no,
+
+                "to_user": to_user,
+                "to_user_name": email2nickname(to_user),
+                "to_user_work_no": to_alibaba_profile.work_no,
+            }
+
+            if request.LANGUAGE_CODE == 'zh-cn':
+                info['operator_department'] = operator_alibaba_profile.dept_name or ''
+                info['operator_position'] = operator_alibaba_profile.post_name or ''
+                info['from_user_department'] = from_alibaba_profile.dept_name or ''
+                info['from_user_position'] = from_alibaba_profile.post_name or ''
+                info['to_user_department'] = to_alibaba_profile.dept_name or ''
+                info['to_user_position'] = to_alibaba_profile.post_name or ''
+            else:
+                info['operator_department'] = operator_alibaba_profile.dept_name_en or ''
+                info['operator_position'] = operator_alibaba_profile.post_name_en or ''
+                info['from_user_department'] = from_alibaba_profile.dept_name_en or ''
+                info['from_user_position'] = from_alibaba_profile.post_name_en or ''
+                info['to_user_department'] = to_alibaba_profile.dept_name_en or ''
+                info['to_user_position'] = to_alibaba_profile.post_name_en or ''
+
+            owner_chain.append(info)
+
         result = {
             "repo_id": repo.id,
             "repo_name": repo.name,
@@ -62,6 +112,7 @@ class RepoView(APIView):
             "encrypted": repo.encrypted,
             "file_count": repo.file_count,
             "permission": permission,
+            "owner_chain": owner_chain,
         }
 
         return Response(result)

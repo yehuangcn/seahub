@@ -9,12 +9,12 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
-import logging
 import json
 import uuid
 import logging
 
 from django.db import models
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -157,3 +157,54 @@ class AlibabaMessageQueue(models.Model):
     class Meta:
         managed = False
         db_table = 'message_queue'
+
+
+class AlibabaRepoOwnerChainManager(models.Manager):
+
+    def add_repo_create_chain(self, repo_id, operator):
+
+        chain = self.model(repo_id=repo_id,
+                operator=operator, from_user=operator,
+                to_user=operator)
+
+        chain.save(using=self._db)
+        return chain
+
+    def add_repo_transfer_chain(self, repo_id, operator,
+            from_user, to_user):
+
+        chain = self.model(repo_id=repo_id, operator=operator,
+                from_user=from_user, to_user=to_user,
+                operation=AlibabaRepoOwnerChain.OPERATION_TRANSFER)
+
+        chain.save(using=self._db)
+        return chain
+
+    def get_repo_owner_chain(self, repo_id):
+
+        return self.filter(repo_id=repo_id).order_by("-timestamp")
+
+
+class AlibabaRepoOwnerChain(models.Model):
+
+    OPERATION_CREATE = 'create'
+    OPERATION_TRANSFER = 'transfer'
+    OPERATION_CHOICES = (
+        (OPERATION_CREATE, 'Create'),
+        (OPERATION_TRANSFER, 'Transer'),
+    )
+
+    id = models.BigAutoField(primary_key=True)
+    repo_id = models.CharField(max_length=36)
+    operator = models.CharField(max_length=191)
+    operation = models.CharField(max_length=32,
+            choices=OPERATION_CHOICES, default=OPERATION_CREATE)
+    from_user = models.CharField(max_length=191)
+    to_user = models.CharField(max_length=191)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    objects = AlibabaRepoOwnerChainManager()
+
+    class Meta:
+        managed = False
+        db_table = 'alibaba_repoownerchain'

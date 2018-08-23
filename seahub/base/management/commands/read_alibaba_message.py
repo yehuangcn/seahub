@@ -10,6 +10,7 @@ from django.core.management.base import BaseCommand
 
 from seaserv import seafile_api, ccnet_api
 from seahub.utils import clear_token
+from seahub.signals import repo_transfered
 from seahub.share.utils import share_dir_to_user, share_dir_to_group
 from seahub.share.models import ExtraSharePermission
 from seahub.profile.models import Profile
@@ -198,6 +199,10 @@ class Command(BaseCommand):
                 for repo in public_repos:
                     print '\ntransfer repo %s' % repo.id
                     seafile_api.set_repo_owner(repo.id, super_ccnet_email)
+                    repo_transfered.send(sender=None, org_id=-1, operator='Administrator',
+                            repo_id=repo_id, from_user=leave_ccnet_email,
+                            to_user=super_ccnet_email)
+
                     print 'reshare repo %s to public' % repo.id
                     seafile_api.add_inner_pub_repo(repo.id, repo.permission)
 
@@ -212,6 +217,9 @@ class Command(BaseCommand):
                     if seafile_api.get_repo_owner(repo_id) != super_ccnet_email:
                         print '\ntransfer repo %s' % repo_id
                         seafile_api.set_repo_owner(repo_id, super_ccnet_email)
+                        repo_transfered.send(sender=None, org_id=-1, operator='Administrator',
+                                repo_id=repo_id, from_user=leave_ccnet_email,
+                                to_user=super_ccnet_email)
 
                     repo = seafile_api.get_repo(repo_id)
 
