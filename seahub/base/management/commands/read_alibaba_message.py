@@ -3,6 +3,7 @@
 
 import json
 import time
+import logging
 from random import randint
 from constance import config
 
@@ -15,9 +16,18 @@ from seahub.share.utils import share_dir_to_user, share_dir_to_group
 from seahub.share.models import ExtraSharePermission
 from seahub.profile.models import Profile
 from seahub.options.models import UserOptions
+from seahub.utils import normalize_dir_path
 
 from seahub.alibaba.models import AlibabaMessageQueue, AlibabaProfile, \
         ALIBABA_MESSAGE_TOPIC_LEAVE_FILE_HANDOVER
+
+from seahub.settings import LOG_DIR
+logging.basicConfig(
+    level = logging.DEBUG,
+    format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+    datefmt = '%a, %d %b %Y %H:%M:%S',
+    filename = normalize_dir_path(LOG_DIR) + 'seahub.log',
+)
 
 def get_leave_work_ccnet_email(message):
 
@@ -29,11 +39,13 @@ def get_leave_work_ccnet_email(message):
     leave_work_profile = AlibabaProfile.objects.get_profile_by_work_no(leave_work_no, False)
     if not leave_work_profile:
         print 'leaveWorkNo %s not found in alibaba profile.' % leave_work_no
+        logging.error('leaveWorkNo %s not found in alibaba profile.' % leave_work_no)
         return None
 
     leave_ccnet_email = leave_work_profile.uid
     if not leave_ccnet_email:
         print 'uid not found for leaveWorkNo %s.' % leave_work_no
+        logging.error('uid not found for leaveWorkNo %s.' % leave_work_no)
         return None
 
     return leave_ccnet_email
@@ -47,11 +59,13 @@ def get_super_work_ccnet_email(message):
     super_work_profile = AlibabaProfile.objects.get_profile_by_work_no(super_work_no)
     if not super_work_profile:
         print 'superWorkNo %s not found in alibaba profile.' % super_work_no
+        logging.error('superWorkNo %s not found in alibaba profile.' % super_work_no)
         return None
 
     super_ccnet_email = super_work_profile.uid
     if not super_ccnet_email:
         print 'uid not found for superWorkNo %s.' % super_work_no
+        logging.error('uid not found for superWorkNo %s.' % super_work_no)
         return None
 
     return super_ccnet_email
@@ -146,11 +160,16 @@ class Command(BaseCommand):
         random_second = randint(0, 60 * 10)
         time.sleep(random_second)
 
-        messages = AlibabaMessageQueue.objects.filter(lock_version=0). \
-                filter(is_consumed=0). \
-                filter(topic=ALIBABA_MESSAGE_TOPIC_LEAVE_FILE_HANDOVER)
+        messages = AlibabaMessageQueue.objects.filter(topic=ALIBABA_MESSAGE_TOPIC_LEAVE_FILE_HANDOVER)
 
         for message in messages:
+            logging.error('2342342')
+
+            if message.lock_version == 1:
+                continue
+
+            if message.is_consumed == 1:
+                continue
 
             self.stdout.write("\n\nStart for message %s.\n" % message.id)
 
@@ -192,18 +211,21 @@ class Command(BaseCommand):
                         owned_repos, shared_out_repos, public_repos)
                 for repo_id in should_delete_repo_ids:
                     print '\ndelete repo %s' % repo_id
+                    logging.error('delete repo %s' % repo_id)
                     seafile_api.remove_repo(repo_id)
 
                 # transfer repo to super
                 # reshare repo public
                 for repo in public_repos:
                     print '\ntransfer repo %s' % repo.id
+                    logging.error('transfer repo %s' % repo.id)
                     seafile_api.set_repo_owner(repo.id, super_ccnet_email)
                     repo_transfered.send(sender=None, org_id=-1, operator='Administrator',
                             repo_id=repo_id, from_user=leave_ccnet_email,
                             to_user=super_ccnet_email)
 
                     print 'reshare repo %s to public' % repo.id
+                    logging.error('reshare repo %s to public' % repo.id)
                     seafile_api.add_inner_pub_repo(repo.id, repo.permission)
 
                 # transfer repo to super
@@ -216,6 +238,7 @@ class Command(BaseCommand):
                     # transfer repo
                     if seafile_api.get_repo_owner(repo_id) != super_ccnet_email:
                         print '\ntransfer repo %s' % repo_id
+                        logging.error('transfer repo %s' % repo_id)
                         seafile_api.set_repo_owner(repo_id, super_ccnet_email)
                         repo_transfered.send(sender=None, org_id=-1, operator='Administrator',
                                 repo_id=repo_id, from_user=leave_ccnet_email,
@@ -225,6 +248,8 @@ class Command(BaseCommand):
 
                     print 'reshare repo/folder to user/group'
                     print info
+                    logging.error('reshare repo/folder to user/group')
+                    logging.error(info)
                     if to_user:
                         if to_user == super_ccnet_email:
                             continue
@@ -237,6 +262,7 @@ class Command(BaseCommand):
 
                 AlibabaMessageQueue.objects.mark_message_consumed(message.id)
             except Exception as e:
+                logging.error(e)
                 print e
 
             AlibabaMessageQueue.objects.remove_lock(message.id)

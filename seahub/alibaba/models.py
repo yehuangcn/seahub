@@ -26,8 +26,6 @@ except ImportError:
     ALIBABA_MESSAGE_TOPIC_LEAVE_FILE_HANDOVER = '02_leave_file_handover'
     ALIBABA_DINGDING_TALK_URL = "dingtalk://dingtalkclient/page/link?url=%s&pc_slide=false"
 
-logger = logging.getLogger(__name__)
-
 
 class AlibabaProfileManager(models.Manager):
 
@@ -35,7 +33,7 @@ class AlibabaProfileManager(models.Manager):
 
         profile_list = super(AlibabaProfileManager, self).filter(uid=email)
         if not profile_list:
-            logger.info('No profile found for user: %s' % email)
+            logger.error('No profile found for user: %s' % email)
             return None
 
         for profile in profile_list:
@@ -43,7 +41,7 @@ class AlibabaProfileManager(models.Manager):
             if profile.work_status in ('A', 'a'):
                 return profile
 
-        logger.info('User %s is not at work status' % email)
+        logger.error('User %s is not at work status' % email)
         return None
 
     def get_profile_by_work_no(self, work_no, at_work=True):
@@ -113,7 +111,7 @@ class AlibabaMessageQueueManager(models.Manager):
         try:
             message = self.get(id=message_id)
         except AlibabaMessageQueue.DoesNotExist:
-            logger.debug('Message %s does not exists' % message_id)
+            logger.error('Message %s does not exists' % message_id)
 
         message.lock_version = 1
         message.save(using=self._db)
@@ -124,7 +122,7 @@ class AlibabaMessageQueueManager(models.Manager):
         try:
             message = self.get(id=message_id)
         except AlibabaMessageQueue.DoesNotExist:
-            logger.debug('Message %s does not exists' % message_id)
+            logger.error('Message %s does not exists' % message_id)
 
         message.lock_version = 0
         message.save(using=self._db)
@@ -135,7 +133,7 @@ class AlibabaMessageQueueManager(models.Manager):
         try:
             message = self.get(id=message_id)
         except AlibabaMessageQueue.DoesNotExist:
-            logger.debug('Message %s does not exists' % message_id)
+            logger.error('Message %s does not exists' % message_id)
 
         message.is_consumed = 1
         message.save(using=self._db)
