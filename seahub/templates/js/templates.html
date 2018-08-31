@@ -1167,7 +1167,7 @@
     <h3 class="hd" id="dialogTitle"><%= title %></h3>
     <div id="share-tabs" class="nav-con-tabs">
         <ul class="nav-con-tabs-nav">
-            <% if (!repo_encrypted && can_generate_share_link) { %>
+            <% if (!repo_encrypted && can_generate_share_link && !is_dir) { %>
             <li class="tab"><a href="#download-link-share" class="a">{% trans "Share Link" %}</a></li>
             <% } %>
             <% if (is_dir) { %>

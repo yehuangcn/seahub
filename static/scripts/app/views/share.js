@@ -55,7 +55,7 @@ define([
 
             this.$("#share-tabs").tabs();
 
-            if (!this.repo_encrypted && app.pageOptions.can_generate_share_link) {
+            if (!this.repo_encrypted && app.pageOptions.can_generate_share_link && !this.is_dir) {
                 this.downloadLinkPanelInit();
             }
             if (this.is_dir) {
