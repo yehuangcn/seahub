@@ -63,6 +63,10 @@ class SearchUser(APIView):
             error_msg = 'q invalid.'
             return api_error(status.HTTP_400_BAD_REQUEST, error_msg)
 
+        # only digit in q string
+        if len(q) < 6 and q.isdigit():
+            q = '000000'[:6 - len(q)] + q
+
         sorted_users = []
         username = request.user.username
         current_user_profile = AlibabaProfile.objects.get_profile(username)

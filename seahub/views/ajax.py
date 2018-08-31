@@ -1387,6 +1387,11 @@ def ajax_group_members_import(request, group_id):
 
     # check work_no validation
     for work_no in work_no_list:
+
+        # only digit in work_no string
+        if len(work_no) < 6 and work_no.isdigit():
+            work_no = '000000'[:6 - len(work_no)] + work_no
+
         alibaba_profile = AlibabaProfile.objects.get_profile_by_work_no(work_no)
         if not alibaba_profile or not alibaba_profile.uid:
             result['failed'].append({
