@@ -1168,7 +1168,11 @@
 
                     <label class="checkbox-label">
                         <input type="checkbox" name="use_passwd" class="vam" />
-                        <span class="checkbox-option vam">{% trans "Add password protection"%}</span>
+                        {% if request.LANGUAGE_CODE == 'zh-cn' or request.LANGUAGE_CODE == 'zh-tw' %}
+                        <span class="checkbox-option vam">设置密码保护</span>
+                        {% else %}
+                        <span class="checkbox-option vam">Add password protection</span>
+                        {% endif %}
                     </label>
                     <div class="hide link-option-content">
                         <label for="passwd">{% trans "Password" %}</label><span class="tip">{% blocktrans %}(at least {{share_link_password_min_length}} characters){% endblocktrans %}</span>
@@ -1184,7 +1188,11 @@
                     {% if share_link_expire_days_min > 0 or share_link_expire_days_max > 0 %}
                     <label class="checkbox-label">
                         <input type="checkbox" checked="checked" disabled="disabled" name="set_expiration" class="vam" />
-                        <span class="checkbox-option vam">{% trans "Add auto expiration"%}</span>
+                        {% if request.LANGUAGE_CODE == 'zh-cn' or request.LANGUAGE_CODE == 'zh-tw' %}
+                        <span class="checkbox-option vam">设置过期时间</span>
+                        {% else %}
+                        <span class="checkbox-option vam">Modify auto expiration</span>
+                        {% endif %}
                         <div class="link-option-content inline-block vam">
                             <input type="text" name="expire_days" class="input short-input" id="expire-days" />
                             <span>{% trans "days" %}</span>
@@ -1214,7 +1222,11 @@
                     <% if (app.pageOptions.is_pro) { %>
                     <label class="checkbox-label">
                         <input type="checkbox" checked="checked" disabled="disabled" name="set_permission" class="vam" />
-                        <span class="checkbox-option vam">{% trans "Set permission" %}</span>
+                        {% if request.LANGUAGE_CODE == 'zh-cn' or request.LANGUAGE_CODE == 'zh-tw' %}
+                        <span class="checkbox-option vam">读写权限控制</span>
+                        {% else %}
+                        <span class="checkbox-option vam">Permission Control</span>
+                        {% endif %}
                     </label>
                     <div class="link-option-content">
                         <label class="radio-item">
