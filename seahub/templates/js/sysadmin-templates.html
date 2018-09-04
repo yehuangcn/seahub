@@ -719,12 +719,12 @@
     <div class="perm">
         <span>
         <% if (is_pro && is_admin) { %>
-            {% trans "Admin" %}
+            {% trans "Co-Owner" %}
         <% } else { %>
             <% if (permission == 'rw') { %>
-                {% trans "Read-Write" %}
+                {% trans "Read-Write-Sync" %}
             <% } else { %>
-                {% trans "Read-Only" %}
+                {% trans "Read-Only-Sync" %}
             <% } %>
         <% } %>
         </span>
@@ -733,27 +733,27 @@
     <select class="perm-toggle-select select-white hide w100">
         <% if (is_pro) { %>
             <% if (is_admin) { %>
-                <option value="rw">{% trans "Read-Write" %}</option>
-                <option value="r">{% trans "Read-Only" %}</option>
-                <option value="admin" selected="selected">{% trans "Admin" %}</option>
+                <option value="rw">{% trans "Read-Write-Sync" %}</option>
+                <option value="r">{% trans "Read-Only-Sync" %}</option>
+                <option value="admin" selected="selected">{% trans "Co-Owner" %}</option>
             <% } else { %>
                 <% if (permission == 'rw') { %>
-                    <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                    <option value="r">{% trans "Read-Only" %}</option>
-                    <option value="admin">{% trans "Admin" %}</option>
+                    <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                    <option value="r">{% trans "Read-Only-Sync" %}</option>
+                    <option value="admin">{% trans "Co-Owner" %}</option>
                 <% } else { %>
-                    <option value="rw">{% trans "Read-Write" %}</option>
-                    <option value="r" selected="selected">{% trans "Read-Only" %}</option>
-                    <option value="admin">{% trans "Admin" %}</option>
+                    <option value="rw">{% trans "Read-Write-Sync" %}</option>
+                    <option value="r" selected="selected">{% trans "Read-Only-Sync" %}</option>
+                    <option value="admin">{% trans "Co-Owner" %}</option>
                 <% } %>
             <% } %>
         <% } else { %>
             <% if (permission == 'rw') { %>
-                <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                <option value="r">{% trans "Read-Only" %}</option>
+                <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                <option value="r">{% trans "Read-Only-Sync" %}</option>
             <% } else { %>
-                <option value="rw">{% trans "Read-Write" %}</option>
-                <option value="r" selected="selected">{% trans "Read-Only" %}</option>
+                <option value="rw">{% trans "Read-Write-Sync" %}</option>
+                <option value="r" selected="selected">{% trans "Read-Only-Sync" %}</option>
             <% } %>
         <% } %>
     </select>
@@ -789,10 +789,10 @@
                     </td>
                     <td>
                         <select name="permission" class="share-permission-select w100">
-                            <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                            <option value="r">{% trans "Read-Only" %}</option>
+                            <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                            <option value="r">{% trans "Read-Only-Sync" %}</option>
                             <% if (is_pro) { %>
-                                <option value="admin">{% trans "Admin" %}</option>
+                                <option value="admin">{% trans "Co-Owner" %}</option>
                             <% } %>
                         </select>
                     </td>
@@ -819,10 +819,10 @@
                     </td>
                     <td>
                         <select name="permission" class="share-permission-select w100">
-                            <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                            <option value="r">{% trans "Read-Only" %}</option>
+                            <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                            <option value="r">{% trans "Read-Only-Sync" %}</option>
                             <% if (is_pro) { %>
-                                <option value="admin">{% trans "Admin" %}</option>
+                                <option value="admin">{% trans "Co-Owner" %}</option>
                             <% } %>
                         </select>
                     </td>

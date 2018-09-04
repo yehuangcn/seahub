@@ -120,16 +120,16 @@ define([
 
             switch(obj.share_permission) {
                 case 'rw':
-                    cur_perm_text = gettext("Read-Write");
+                    cur_perm_text = gettext("Read-Write-Sync");
                     break;
                 case 'r':
-                    cur_perm_text = gettext("Read-Only");
+                    cur_perm_text = gettext("Read-Only-Sync");
                     break;
                 case 'cloud-edit':
-                    cur_perm_text = gettext("Preview-Edit-on-Cloud");
+                    cur_perm_text = gettext("Edit-on-Cloud");
                     break;
                 case 'preview':
-                    cur_perm_text = gettext("Preview-on-Cloud");
+                    cur_perm_text = gettext("View-on-Cloud");
                     break;
             }
 

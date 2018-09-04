@@ -44,8 +44,8 @@
         <% if (showSharePerm) { %>
         <label for="share-permission">{% trans "Share Permission" %}</label><br />
         <select id="share-permission" name="permission" class="select">
-            <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-            <option value="r">{% trans "Read-Only" %}</option>
+            <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+            <option value="r">{% trans "Read-Only-Sync" %}</option>
         </select>
         <br />
         <% } %>
@@ -1380,14 +1380,14 @@
                         </td>
                         <td>
                             <select name="permission" class="share-permission-select w100">
-                                <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                                <option value="r">{% trans "Read-Only" %}</option>
+                                <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                                <option value="r">{% trans "Read-Only-Sync" %}</option>
                                 <% if (show_admin_perm_option) { %>
-                                <option value="admin">{% trans "Admin" %}</option>
+                                <option value="admin">{% trans "Co-Owner" %}</option>
                                 <% } %>
                                 {% if is_pro %}
-                                <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                                <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                                <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                                <option value="preview">{% trans "View-on-Cloud" %}</option>
                                 {% endif %}
                             </select>
                         </td>
@@ -1420,14 +1420,14 @@
                         </td>
                         <td>
                             <select name="permission" class="share-permission-select w100">
-                                <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                                <option value="r">{% trans "Read-Only" %}</option>
+                                <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                                <option value="r">{% trans "Read-Only-Sync" %}</option>
                                 <% if (show_admin_perm_option) { %>
-                                <option value="admin">{% trans "Admin" %}</option>
+                                <option value="admin">{% trans "Co-Owner" %}</option>
                                 <% } %>
                                 {% if is_pro %}
-                                <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                                <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                                <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                                <option value="preview">{% trans "View-on-Cloud" %}</option>
                                 {% endif %}
                             </select>
                         </td>
@@ -1708,16 +1708,16 @@
         <div class="perm">
             <span>
                 <% if (show_admin && is_admin) { %>
-                    {% trans "Admin" %}
+                    {% trans "Co-Owner" %}
                 <% } else { %>
                     <% if (permission == 'rw') { %>
-                        {% trans "Read-Write" %}
+                        {% trans "Read-Write-Sync" %}
                     <% } else if (permission == 'r') { %>
-                        {% trans "Read-Only" %}
+                        {% trans "Read-Only-Sync" %}
                     <% } else if (permission == 'cloud-edit') { %>
-                        {% trans "Preview-Edit-on-Cloud" %}
+                        {% trans "Edit-on-Cloud" %}
                     <% } else { %>
-                        {% trans "Preview-on-Cloud" %}
+                        {% trans "View-on-Cloud" %}
                     <% } %>
                 <% } %>
             </span>
@@ -1726,24 +1726,24 @@
         <select class="perm-toggle-select select-white hide w100">
             <% if (show_admin) { %>
                 <% if (is_admin) { %>
-                    <option value="rw">{% trans "Read-Write" %}</option>
-                    <option value="r">{% trans "Read-Only" %}</option>
-                    <option value="admin" selected="selected">{% trans "Admin" %}</option>
-                    <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                    <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                    <option value="rw">{% trans "Read-Write-Sync" %}</option>
+                    <option value="r">{% trans "Read-Only-Sync" %}</option>
+                    <option value="admin" selected="selected">{% trans "Co-Owner" %}</option>
+                    <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                    <option value="preview">{% trans "View-on-Cloud" %}</option>
                 <% } else { %>
-                    <option value="rw" <% if (permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write" %}</option>
-                    <option value="r" <% if (permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only" %}</option>
-                    <option value="admin">{% trans "Admin" %}</option>
-                    <option value="cloud-edit" <% if (permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Preview-Edit-on-Cloud" %}</option>
-                    <option value="preview" <% if (permission == 'preview') { %>selected="selected"<% } %>>{% trans "Preview-on-Cloud" %}</option>
+                    <option value="rw" <% if (permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write-Sync" %}</option>
+                    <option value="r" <% if (permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only-Sync" %}</option>
+                    <option value="admin">{% trans "Co-Owenr" %}</option>
+                    <option value="cloud-edit" <% if (permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Edit-on-Cloud" %}</option>
+                    <option value="preview" <% if (permission == 'preview') { %>selected="selected"<% } %>>{% trans "View-on-Cloud" %}</option>
                 <% } %>
             <% } else { %>
-                <option value="rw" <% if (permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write" %}</option>
-                <option value="r" <% if (permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only" %}</option>
+                <option value="rw" <% if (permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write-Sync" %}</option>
+                <option value="r" <% if (permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only-Sync" %}</option>
                 {% if is_pro %}
-                <option value="cloud-edit" <% if (permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Preview-Edit-on-Cloud" %}</option>
-                <option value="preview" <% if (permission == 'preview') { %>selected="selected"<% } %>>{% trans "Preview-on-Cloud" %}</option>
+                <option value="cloud-edit" <% if (permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Edit-on-Cloud" %}</option>
+                <option value="preview" <% if (permission == 'preview') { %>selected="selected"<% } %>>{% trans "View-on-Cloud" %}</option>
                 {% endif %}
             <% } %>
         </select>
@@ -1776,11 +1776,11 @@
                         </td>
                         <td>
                             <select name="permission" class="folder-perm-select w100">
-                                <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                                <option value="r">{% trans "Read-Only" %}</option>
+                                <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                                <option value="r">{% trans "Read-Only-Sync" %}</option>
                                 {% if is_pro %}
-                                <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                                <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                                <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                                <option value="preview">{% trans "View-on-Cloud" %}</option>
                                 {% endif %}
                             </select>
                         </td>
@@ -1806,11 +1806,11 @@
                         </td>
                         <td>
                             <select name="permission" class="folder-perm-select w100">
-                                <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-                                <option value="r">{% trans "Read-Only" %}</option>
+                                <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+                                <option value="r">{% trans "Read-Only-Sync" %}</option>
                                 {% if is_pro %}
-                                <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                                <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                                <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                                <option value="preview">{% trans "View-on-Cloud" %}</option>
                                 {% endif %}
                             </select>
                         </td>
@@ -1969,15 +1969,15 @@
       <% if (encrypted) { %>
       <img src="{{ MEDIA_URL }}img/lib/48/lib-encrypted.png" width="24" title="{% trans "Encrypted" %}" alt="{% trans "Encrypted" %}" />
       <% } else { %>
-      <img src="{{ MEDIA_URL }}img/lib/48/lib.png" width="24" title="{% trans "Read-Write" %}" alt="{% trans "Read-Write" %}" />
+      <img src="{{ MEDIA_URL }}img/lib/48/lib.png" width="24" title="{% trans "Read-Write" %}" alt="{% trans "Read-Write-Sync" %}" />
       <% } %>
     </td>
     <td><a href="#my-libs/lib/<%= id %>" target="_blank"><%- name %></a></td>
     <td><%= mtime_relative %></td>
     <td>
         <select name="permission" class="share-permission-select w100">
-            <option value="rw" selected="selected">{% trans "Read-Write" %}</option>
-            <option value="r">{% trans "Read-Only" %}</option>
+            <option value="rw" selected="selected">{% trans "Read-Write-Sync" %}</option>
+            <option value="r">{% trans "Read-Only-Sync" %}</option>
         </select>
     </td>
 </script>
@@ -2368,11 +2368,11 @@
                             </td>
                             <td>
                                 <select name="permission" class="folder-perm-select w100">
-                                    <option value="rw" selected="selected">{% trans "Read-Write"%}</option>
-                                    <option value="r">{% trans "Read-Only"%}</option>
+                                    <option value="rw" selected="selected">{% trans "Read-Write-Sync"%}</option>
+                                    <option value="r">{% trans "Read-Only-Sync"%}</option>
                                     {% if is_pro %}
-                                    <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                                    <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                                    <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                                    <option value="preview">{% trans "View-on-Cloud" %}</option>
                                     {% endif %}
                                 </select>
                             </td>
@@ -2418,11 +2418,11 @@
                             </td>
                             <td>
                                 <select name="permission" class="folder-perm-select w100">
-                                    <option value="rw" selected="selected">{% trans "Read-Write"%}</option>
-                                    <option value="r">{% trans "Read-Only"%}</option>
+                                    <option value="rw" selected="selected">{% trans "Read-Write-Sync"%}</option>
+                                    <option value="r">{% trans "Read-Only-Sync"%}</option>
                                     {% if is_pro %}
-                                    <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                                    <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                                    <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                                    <option value="preview">{% trans "View-on-Cloud" %}</option>
                                     {% endif %}
                                 </select>
                             </td>
@@ -2570,32 +2570,32 @@
                 <span class="cur-perm">{% trans "Admin" %}</span>
                 <a href="#" title="{% trans "Edit" %}" class="perm-edit-icon sf2-icon-edit op-icon vh"></a>
                 <select class="perm-select select-white hide">
-                    <option value="rw">{% trans "Read-Write" %}</option>
-                    <option value="r">{% trans "Read-Only" %}</option>
-                    <option value="admin" selected="selected">{% trans "Admin" %}</option>
-                    <option value="cloud-edit">{% trans "Preview-Edit-on-Cloud" %}</option>
-                    <option value="preview">{% trans "Preview-on-Cloud" %}</option>
+                    <option value="rw">{% trans "Read-Write-Sync" %}</option>
+                    <option value="r">{% trans "Read-Only-Sync" %}</option>
+                    <option value="admin" selected="selected">{% trans "Co-Owner" %}</option>
+                    <option value="cloud-edit">{% trans "Edit-on-Cloud" %}</option>
+                    <option value="preview">{% trans "View-on-Cloud" %}</option>
                 </select>
             <% } else { %>
                 <span class="cur-perm"><%= cur_perm_text %></span>
                 <a href="#" title="{% trans "Edit" %}" class="perm-edit-icon sf2-icon-edit op-icon vh"></a>
                 <select class="perm-select select-white hide">
-                    <option value="rw" <% if (share_permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write" %}</option>
-                    <option value="r" <% if (share_permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only" %}</option>
-                    <option value="admin">{% trans "Admin" %}</option>
-                    <option value="cloud-edit" <% if (share_permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Preview-Edit-on-Cloud" %}</option>
-                    <option value="preview" <% if (share_permission == 'preview') { %>selected="selected"<% } %>>{% trans "Preview-on-Cloud" %}</option>
+                    <option value="rw" <% if (share_permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write-Sync" %}</option>
+                    <option value="r" <% if (share_permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only-Sync" %}</option>
+                    <option value="admin">{% trans "Co-Owner" %}</option>
+                    <option value="cloud-edit" <% if (share_permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Edit-on-Cloud" %}</option>
+                    <option value="preview" <% if (share_permission == 'preview') { %>selected="selected"<% } %>>{% trans "View-on-Cloud" %}</option>
                 </select>
             <% } %>
         <% } else { %>
             <span class="cur-perm"><%= cur_perm_text %></span>
             <a href="#" title="{% trans "Edit" %}" class="perm-edit-icon sf2-icon-edit op-icon vh"></a>
             <select class="perm-select select-white hide">
-                <option value="rw" <% if (share_permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write" %}</option>
-                <option value="r" <% if (share_permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only" %}</option>
+                <option value="rw" <% if (share_permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write-Sync" %}</option>
+                <option value="r" <% if (share_permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only-Sync" %}</option>
                 {% if is_pro %}
-                <option value="cloud-edit" <% if (share_permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Preview-Edit-on-Cloud" %}</option>
-                <option value="preview" <% if (share_permission == 'preview') { %>selected="selected"<% } %>>{% trans "Preview-on-Cloud" %}</option>
+                <option value="cloud-edit" <% if (share_permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Edit-on-Cloud" %}</option>
+                <option value="preview" <% if (share_permission == 'preview') { %>selected="selected"<% } %>>{% trans "View-on-Cloud" %}</option>
                 {% endif %}
             </select>
         <% } %>
@@ -2619,11 +2619,11 @@
         <span class="cur-perm"><%= cur_perm_text %></span>
         <a href="#" title="{% trans "Edit" %}" class="perm-edit-icon sf2-icon-edit op-icon vh"></a>
         <select class="perm-select select-white hide">
-            <option value="rw" <% if (share_permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write" %}</option>
-            <option value="r" <% if (share_permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only" %}</option>
+            <option value="rw" <% if (share_permission == 'rw') { %>selected="selected"<% } %>>{% trans "Read-Write-Sync" %}</option>
+            <option value="r" <% if (share_permission == 'r') { %>selected="selected"<% } %>>{% trans "Read-Only-Sync" %}</option>
             {% if is_pro %}
-            <option value="cloud-edit" <% if (share_permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Preview-Edit-on-Cloud" %}</option>
-            <option value="preview" <% if (share_permission == 'preview') { %>selected="selected"<% } %>>{% trans "Preview-on-Cloud" %}</option>
+            <option value="cloud-edit" <% if (share_permission == 'cloud-edit') { %>selected="selected"<% } %>>{% trans "Edit-on-Cloud" %}</option>
+            <option value="preview" <% if (share_permission == 'preview') { %>selected="selected"<% } %>>{% trans "View-on-Cloud" %}</option>
             {% endif %}
         </select>
     </td>

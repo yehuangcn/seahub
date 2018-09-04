@@ -332,9 +332,9 @@ define([
             if (is_encrypted) {
                 return gettext("Encrypted library");
             } else if (is_readonly) {
-                return gettext("Read-Only library");
+                return gettext("Read-Only-Sync");
             } else {
-                return gettext("Read-Write library");
+                return gettext("Read-Write-Sync");
             }
         },
 

@@ -344,20 +344,20 @@ define([
             if (options.encrypted) {
                 title = gettext("Encrypted library");
             } else if (options.is_admin) { // shared with 'admin' permission
-                title = gettext("Admin access");
+                title = gettext("Co-Owner");
             } else {
                 switch(options.permission) {
                     case 'rw':
-                        title = gettext("Read-Write library");
+                        title = gettext("Read-Write-Sync");
                         break;
                     case 'r':
-                        title = gettext("Read-Only library");
+                        title = gettext("Read-Only-Sync");
                         break;
                     case 'cloud-edit':
-                        title = gettext("Preview-Edit-on-Cloud library");
+                        title = gettext("Edit-on-Cloud");
                         break;
                     case 'preview':
-                        title = gettext("Preview-on-Cloud library");
+                        title = gettext("View-on-Cloud");
                         break;
                 }
             }
@@ -368,16 +368,16 @@ define([
             var title;
             switch(options.permission) {
                 case 'rw':
-                    title = gettext("Read-Write folder");
+                    title = gettext("Read-Write-Sync");
                     break;
                 case 'r':
-                    title = gettext("Read-Only folder");
+                    title = gettext("Read-Only-Sync");
                     break;
                 case 'cloud-edit':
-                    title = gettext("Preview-Edit-on-Cloud folder");
+                    title = gettext("Edit-on-Cloud");
                     break;
                 case 'preview':
-                    title = gettext("Preview-on-Cloud folder");
+                    title = gettext("View-on-Cloud");
                     break;
             }
             return title;
