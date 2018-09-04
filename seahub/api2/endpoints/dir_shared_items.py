@@ -33,6 +33,7 @@ from seahub.utils import (is_org_context, is_valid_username,
 from seahub.share.signals import share_repo_to_user_successful, share_repo_to_group_successful
 from seahub.constants import PERMISSION_READ, PERMISSION_READ_WRITE, \
         PERMISSION_ADMIN
+from seahub.utils.repo import get_available_repo_perms
 
 from seahub.alibaba.utils import get_ali_user_profile_dict
 
@@ -223,7 +224,7 @@ class DirSharedItemsEndpoint(APIView):
             return api_error(status.HTTP_404_NOT_FOUND, 'Folder %s not found.' % path)
 
         permission = request.data.get('permission', PERMISSION_READ)
-        if permission not in [PERMISSION_READ, PERMISSION_READ_WRITE, PERMISSION_ADMIN]:
+        if permission not in get_available_repo_perms():
             return api_error(status.HTTP_400_BAD_REQUEST, 'permission invalid.')
 
         repo_owner = self.get_repo_owner(request, repo_id)
@@ -299,7 +300,7 @@ class DirSharedItemsEndpoint(APIView):
             return api_error(status.HTTP_403_FORBIDDEN, 'Permission denied.')
 
         permission = request.data.get('permission', PERMISSION_READ)
-        if permission not in [PERMISSION_READ, PERMISSION_READ_WRITE, PERMISSION_ADMIN]:
+        if permission not in get_available_repo_perms():
             return api_error(status.HTTP_400_BAD_REQUEST, 'permission invalid.')
 
         result = {}

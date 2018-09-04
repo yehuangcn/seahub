@@ -68,7 +68,7 @@ from seahub.utils.file_op import check_file_lock, \
         ONLINE_OFFICE_LOCK_OWNER, if_locked_by_online_office
 from seahub.views import check_folder_permission, \
         get_unencry_rw_repos_by_user
-from seahub.utils.repo import is_repo_owner
+from seahub.utils.repo import is_repo_owner, parse_repo_perm
 from seahub.group.utils import is_group_member
 
 from seahub.constants import HASH_URLS
@@ -484,6 +484,9 @@ def view_lib_file(request, repo_id, path):
     dl = request.GET.get('dl', '0') == '1'
     raw = request.GET.get('raw', '0') == '1'
     if dl or raw:
+        if parse_repo_perm(permission).can_download is False:
+            raise Http404
+
         operation = 'download' if dl else 'view'
         token = seafile_api.get_fileserver_access_token(
             repo_id, file_id, operation, username,
@@ -511,6 +514,7 @@ def view_lib_file(request, repo_id, path):
         'highlight_keyword': settings.HIGHLIGHT_KEYWORD,
         'enable_file_comment': settings.ENABLE_FILE_COMMENT,
         'enable_watermark': ENABLE_WATERMARK,
+        'can_download_file': parse_repo_perm(permission).can_download,
     }
 
     # check whether file is starred
@@ -544,6 +548,12 @@ def view_lib_file(request, repo_id, path):
 
     return_dict['fileshare'] = fileshare,
     return_dict['file_shared_link'] = file_shared_link
+
+    if parse_repo_perm(permission).can_download and \
+       request.user.permissions.can_generate_share_link():
+        return_dict['can_share_file'] = True
+    else:
+        return_dict['can_share_file'] = False
 
     # fetch file contributors and latest contributor
     try:
@@ -621,7 +631,7 @@ def view_lib_file(request, repo_id, path):
             return_dict['file_content'] = file_content
 
         can_edit_file = True
-        if permission == 'r':
+        if parse_repo_perm(permission).can_edit_on_web is False:
             can_edit_file = False
         elif is_locked and not locked_by_me:
             can_edit_file = False
@@ -678,7 +688,7 @@ def view_lib_file(request, repo_id, path):
                 action_name = 'view'
 
             # then check if can edit file
-            if ENABLE_OFFICE_WEB_APP_EDIT and permission == 'rw' and \
+            if ENABLE_OFFICE_WEB_APP_EDIT and parse_repo_perm(permission).can_edit_on_web and \
                     fileext in OFFICE_WEB_APP_EDIT_FILE_EXTENSION and \
                     ((not is_locked) or (is_locked and locked_by_me) or \
                     (is_locked and locked_by_online_office)):
@@ -839,6 +849,7 @@ def view_history_file_common(request, repo_id, ret_dict):
     ret_dict['fileext'] = fileext
     ret_dict['raw_path'] = raw_path
     ret_dict['enable_watermark'] = ENABLE_WATERMARK
+    ret_dict['can_download_file'] = parse_repo_perm(user_perm).can_download
     if not ret_dict.has_key('filetype'):
         ret_dict['filetype'] = filetype
 
@@ -1317,7 +1328,8 @@ def file_edit_submit(request, repo_id):
     parent_dir = os.path.dirname(path)
 
     # edit file, so check parent_dir's permission
-    if check_folder_permission(request, repo_id, parent_dir) != 'rw':
+    if parse_repo_perm(check_folder_permission(
+            request, repo_id, parent_dir)).can_edit_on_web is False:
         return error_json(_(u'Permission denied'))
 
     try:
@@ -1419,7 +1431,8 @@ def file_edit(request, repo_id):
     filename = urllib2.quote(u_filename.encode('utf-8'))
     parent_dir = os.path.dirname(path)
 
-    if check_folder_permission(request, repo.id, parent_dir) != 'rw':
+    if parse_repo_perm(check_folder_permission(
+            request, repo.id, parent_dir)).can_edit_on_web is False:
         return render_permission_error(request, _(u'Unable to edit file'))
 
     head_id = repo.head_cmmt_id
@@ -1574,7 +1587,8 @@ def download_file(request, repo_id, obj_id):
     # only check the permissions at the repo level
     # to prevent file can not be downloaded on the history page
     # if it has been renamed
-    if check_folder_permission(request, repo_id, '/'):
+    if parse_repo_perm(check_folder_permission(
+            request, repo_id, '/')).can_download is True:
         # Get a token to access file
         token = seafile_api.get_fileserver_access_token(repo_id,
                 obj_id, 'download', username)
@@ -1607,8 +1621,8 @@ def get_file_content_by_commit_and_path(request, repo_id, commit_id, path, file_
     if not obj_id or obj_id == EMPTY_SHA1:
         return '', None
     else:
-        permission = check_folder_permission(request, repo_id, '/')
-        if permission:
+        if parse_repo_perm(check_folder_permission(
+                request, repo_id, '/')).can_preview is True:
             # Get a token to visit file
             token = seafile_api.get_fileserver_access_token(repo_id,
                     obj_id, 'view', request.user.username)
