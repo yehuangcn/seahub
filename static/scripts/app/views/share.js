@@ -270,17 +270,25 @@ define([
                     dataType: 'json',
                     success: function(data) {
                         // show 'can preview/edit' perm option for download link or not
-                        if (data.can_preview) {
-                            _this.$('#file-share-link-preview-only-radio').removeClass('hide');
-                        }
+                        if (!data.can_preview && !data.can_edit) {
+                            if (['zh-CN', 'zh-cn', 'zh-TW', 'zh-tw'].indexOf(app.pageOptions.language_code) >= 0) {
+                                _this.$("#download-link-share").html("该文件格式不支持云端预览和云端编辑");
+                            } else {
+                                _this.$("#download-link-share").html("Neither view link nor edit link is applicable to this file format");
+                            }
+                        } else {
+                            if (data.can_preview) {
+                                _this.$('#file-share-link-preview-only-radio').removeClass('hide');
+                            }
 
-                        var file_ext = '';
-                        if (_this.obj_name.lastIndexOf('.') != -1) {
-                            file_ext = _this.obj_name.substr(_this.obj_name.lastIndexOf('.') + 1)
-                                .toLowerCase();
-                        }
-                        if ((file_ext == 'docx' || file_ext == 'xlsx' || file_ext == 'pptx') && data.can_edit) {
-                            _this.$('#file-share-link-edit-download-radio').removeClass('hide');
+                            var file_ext = '';
+                            if (_this.obj_name.lastIndexOf('.') != -1) {
+                                file_ext = _this.obj_name.substr(_this.obj_name.lastIndexOf('.') + 1)
+                                    .toLowerCase();
+                            }
+                            if ((file_ext == 'docx' || file_ext == 'xlsx' || file_ext == 'pptx') && data.can_edit) {
+                                _this.$('#file-share-link-edit-only-radio').removeClass('hide');
+                            }
                         }
                     }
                 });
@@ -406,6 +414,11 @@ define([
                             linkPermDetails = {
                                 "can_edit": true,
                                 "can_download": true
+                            };
+                        case 'edit_only':
+                            linkPermDetails = {
+                                "can_edit": true,
+                                "can_download": false
                             };
                             break;
                     }
