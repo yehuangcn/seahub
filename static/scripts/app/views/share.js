@@ -173,6 +173,18 @@ define([
             this.download_link_token = link_data.token; // for 'link delete'
 
             $span.html(link);
+            if (link_data.permissions.can_edit) {
+                this.$('#alibaba-can-edit-share-link-desc-cn').removeClass('hide');
+                this.$('#alibaba-can-edit-share-link-desc-en').removeClass('hide');
+                this.$('#alibaba-preview-only-share-link-desc-cn').addClass('hide');
+                this.$('#alibaba-preview-only-share-link-desc-en').addClass('hide');
+            } else {
+                this.$('#alibaba-can-edit-share-link-desc-cn').addClass('hide');
+                this.$('#alibaba-can-edit-share-link-desc-en').addClass('hide');
+                this.$('#alibaba-preview-only-share-link-desc-cn').removeClass('hide');
+                this.$('#alibaba-preview-only-share-link-desc-en').removeClass('hide');
+            }
+
             if (link_data.permissions.can_download) {
                 $dLink.show().prev('dt').show();
                 $dSpan.html(d_link);

@@ -1237,7 +1237,18 @@
                 </form>
                 <div id="download-link-operations" class="hide">
                     <dl>
-                        <dt>{% trans "Link: " %}</dt>
+                        {% if request.LANGUAGE_CODE == 'zh-cn' or request.LANGUAGE_CODE == 'zh-tw' %}
+                        <dt id="alibaba-preview-only-share-link-desc-cn">查看链接： 阿里巴巴经济体内，获取该链接的任何人<strong>可以查看</strong>该文件</dt>
+                        {% else %}
+                        <dt id="alibaba-preview-only-share-link-desc-en">View Link: Within Alibaba Group, anyone who gets the link can <strong>VIEW</strong> the file</dt>
+                        {% endif %}
+
+                        {% if request.LANGUAGE_CODE == 'zh-cn' or request.LANGUAGE_CODE == 'zh-tw' %}
+                        <dt id="alibaba-can-edit-share-link-desc-cn">编辑链接： 阿里巴巴经济体内，获取该链接的任何人<strong>可以编辑</strong>该文件</dt>
+                        {% else %}
+                        <dt id="alibaba-can-edit-share-link-desc-en">Edit Link: Within Alibaba Group, anyone who gets the link can <strong>EDIT</strong> the file</dt>
+                        {% endif %}
+
                         <dd id="download-link">
                             <span class="link-placeholder"></span>
                             <input type="text" readonly="readonly" value="" class="shared-link hide" />
