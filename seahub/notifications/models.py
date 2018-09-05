@@ -23,7 +23,7 @@ from seahub.base.fields import LowerCaseCharField
 from seahub.base.templatetags.seahub_tags import email2nickname
 from seahub.invitations.models import Invitation
 from seahub.utils.repo import get_repo_shared_users
-from seahub.utils import normalize_cache_key
+from seahub.utils import normalize_cache_key, get_site_name
 from seahub.constants import HASH_URLS
 from seahub.utils import get_site_scheme_and_netloc
 
@@ -824,10 +824,10 @@ def add_share_repo_msg_cb(sender, **kwargs):
         # 邀请人: 姓名(花名)
         # 资料库名称: 这是一个资料库
         # 发起时间: 2018-07-13 13:14:12
-        # 消息系统: Alifile云文件
+        # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "您收到一份共享资料",
                 "form": [
@@ -841,7 +841,7 @@ def add_share_repo_msg_cb(sender, **kwargs):
                     },
                     {
                         "key": "系统消息:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -855,7 +855,7 @@ def add_share_repo_msg_cb(sender, **kwargs):
         # Message From: Alifle云文件
         content_en = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "One library is shared to you",
                 "form": [
@@ -869,7 +869,7 @@ def add_share_repo_msg_cb(sender, **kwargs):
                     },
                     {
                         "key": "Message From:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -926,10 +926,10 @@ def add_share_repo_to_group_msg_cb(sender, **kwargs):
         # 邀请人: 姓名(花名)
         # 群组名称: 这是一个群组
         # 资料库名称: 这是一个资料库
-        # 消息系统: Alifile云文件
+        # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "您所在的群组收到一个资料库",
                 "form": [
@@ -947,7 +947,7 @@ def add_share_repo_to_group_msg_cb(sender, **kwargs):
                     },
                     {
                         "key": "系统消息:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -961,7 +961,7 @@ def add_share_repo_to_group_msg_cb(sender, **kwargs):
         # Message From: Alifle云文件
         content_en = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "As you are group member, One library is shared to you",
                 "form": [
@@ -979,7 +979,7 @@ def add_share_repo_to_group_msg_cb(sender, **kwargs):
                     },
                     {
                         "key": "Message From:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -1035,10 +1035,10 @@ def grpmsg_added_cb(sender, **kwargs):
         # 评论人: 姓名(花名)
         # 群组名称: 这是一个群组
         # 评论内容: 这是一个评论
-        # 消息系统: Alifile云文件
+        # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "您所在的群组有一个新的评论",
                 "form": [
@@ -1056,7 +1056,7 @@ def grpmsg_added_cb(sender, **kwargs):
                     },
                     {
                         "key": "系统消息:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -1070,7 +1070,7 @@ def grpmsg_added_cb(sender, **kwargs):
         # Message From: Alifle云文件
         content_en = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "您所在的群组有一个新的评论",
                 "form": [
@@ -1088,7 +1088,7 @@ def grpmsg_added_cb(sender, **kwargs):
                     },
                     {
                         "key": "Message From:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -1158,10 +1158,10 @@ def add_user_to_group_cb(sender, **kwargs):
         # Form:
         # 邀请人: 姓名(花名)
         # 群组名称: 这是一个群组
-        # 消息系统: Alifile云文件
+        # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "您被邀请到了一个群组",
                 "form": [
@@ -1175,7 +1175,7 @@ def add_user_to_group_cb(sender, **kwargs):
                     },
                     {
                         "key": "系统消息:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -1187,7 +1187,7 @@ def add_user_to_group_cb(sender, **kwargs):
         # Message From: Alifle云文件
         content_en = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "You are invited into a group",
                 "form": [
@@ -1201,7 +1201,7 @@ def add_user_to_group_cb(sender, **kwargs):
                     },
                     {
                         "key": "Message From:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -1244,10 +1244,10 @@ def comment_file_successful_cb(sender, **kwargs):
         # 邀请人: 姓名(花名)
         # 文件名称: 这是一个文件
         # 评论内容: 这是一个评论
-        # 消息系统: Alifile云文件
+        # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "您的文件有一个新的评论",
                 "form": [
@@ -1265,7 +1265,7 @@ def comment_file_successful_cb(sender, **kwargs):
                     },
                     {
                         "key": "系统消息:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
@@ -1279,7 +1279,7 @@ def comment_file_successful_cb(sender, **kwargs):
         # Message From: Alifle云文件
         content_en = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
-            "head": {"bgcolor": "FFF17334", "text": "Alifile云文件"},
+            "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
                 "title": "One comment is added to your file",
                 "form": [
@@ -1297,7 +1297,7 @@ def comment_file_successful_cb(sender, **kwargs):
                     },
                     {
                         "key": "系统消息:",
-                        "value": "Alifile云文件"
+                        "value": get_site_name()
                     }
                 ]
             }
