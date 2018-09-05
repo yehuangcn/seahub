@@ -695,7 +695,9 @@ def view_lib_file(request, repo_id, path):
                 action_name = 'edit'
 
             wopi_dict = get_wopi_dict(username, repo_id, path,
-                    action_name=action_name, language_code=request.LANGUAGE_CODE)
+                    action_name=action_name,
+                    language_code=request.LANGUAGE_CODE,
+                    can_download=parse_repo_perm(permission).can_download)
 
             if wopi_dict:
                 if is_pro_version() and action_name == 'edit':
@@ -806,7 +808,8 @@ def view_history_file_common(request, repo_id, ret_dict):
 
                 # obj_id for view trash/history file
                 wopi_dict = get_wopi_dict(username, repo_id, path,
-                        language_code=request.LANGUAGE_CODE, obj_id=obj_id)
+                        language_code=request.LANGUAGE_CODE, obj_id=obj_id,
+                        can_download=parse_repo_perm(user_perm).can_download)
 
                 if wopi_dict:
                     ret_dict['wopi_dict'] = wopi_dict
