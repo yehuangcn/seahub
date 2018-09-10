@@ -659,9 +659,6 @@
                 <div class="mobile-menu-mask"></div>
                 <div class="mobile-menu-content">
                     <ul>
-                        <% if (dirent.perm == 'rw' || dirent.perm == 'r') { %>
-                        <li><a class="op download download-dir" href="#">{% trans "Download" %}</a></li>
-                        <% } %>
                         <% if (can_share_dir) { %>
                         <li><a href="#" class="op share">{% trans "Share" %}</a></li>
                         <% } %>
@@ -878,9 +875,6 @@
                 <div class="mobile-menu-mask"></div>
                 <div class="mobile-menu-content">
                 <ul>
-                <% if (dirent.perm == 'rw' || dirent.perm == 'r') { %>
-                <li><a class="op download download-close-menu" href="<%= download_url %>">{% trans "Download" %}</a></li>
-                <% } %>
                 <% if (can_share_file) { %>
                 <li><a class="op share" href="#">{% trans "Share" %}</a></li>
                 <% } %>
