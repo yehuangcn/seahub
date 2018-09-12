@@ -103,7 +103,8 @@ class UserManager(object):
             raise User.DoesNotExist, 'User matching query does not exits.'
 
         if not emailuser:
-            emailuser = User.objects.create_user(email, '!')
+            ccnet_api.add_emailuser(email, UNUSABLE_PASSWORD, 0, 0)
+            emailuser = ccnet_threaded_rpc.get_emailuser(email)
 
         if emailuser:
             user = User(emailuser.email)
