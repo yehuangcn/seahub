@@ -29,6 +29,37 @@ except ImportError:
 
 class AlibabaProfileManager(models.Manager):
 
+    def get_profile_dict(self, email, language_code='en'):
+
+        profile_dict = {
+            "work_no": '',
+            "dept_name": '',
+            "post_name": '',
+        }
+
+        profile_list = super(AlibabaProfileManager, self).filter(uid=email)
+        if not profile_list:
+            logger.error('No profile found for user: %s' % email)
+            return profile_dict
+
+        for profile in profile_list:
+
+            # at work
+            if profile.work_status in ('A', 'a'):
+
+                profile_dict['work_no'] = profile.work_no or ''
+                if language_code in ('zh-cn', 'zh-tw'):
+                    profile_dict['dept_name'] = profile.dept_name or ''
+                    profile_dict['post_name'] = profile.post_name or ''
+                else:
+                    profile_dict['dept_name'] = profile.dept_name_en or ''
+                    profile_dict['post_name'] = profile.post_name_en or ''
+
+                return profile_dict
+
+        logger.error('User %s is not at work status' % email)
+        return profile_dict
+
     def get_profile(self, email):
 
         profile_list = super(AlibabaProfileManager, self).filter(uid=email)
