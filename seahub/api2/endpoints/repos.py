@@ -58,13 +58,16 @@ class RepoView(APIView):
         for item in chains:
 
             operator = item.operator
-            operator_alibaba_profile = AlibabaProfile.objects.get_profile(operator)
+            operator_dict = AlibabaProfile.objects.get_profile_dict(operator,
+                    request.LANGUAGE_CODE)
 
             from_user = item.from_user
-            from_alibaba_profile = AlibabaProfile.objects.get_profile(from_user)
+            from_user_dict = AlibabaProfile.objects.get_profile_dict(from_user,
+                    request.LANGUAGE_CODE)
 
             to_user = item.to_user
-            to_alibaba_profile = AlibabaProfile.objects.get_profile(to_user)
+            to_user_dict = AlibabaProfile.objects.get_profile_dict(to_user,
+                    request.LANGUAGE_CODE)
 
             info = {
                 "time": datetime_to_isoformat_timestr(item.timestamp),
@@ -72,31 +75,22 @@ class RepoView(APIView):
 
                 "operator": item.operator,
                 "operator_name": email2nickname(operator),
-                "operator_work_no": operator_alibaba_profile.work_no,
+                "operator_work_no": operator_dict['work_no'],
+                "operator_department": operator_dict['dept_name'],
+                "operator_position": operator_dict['post_name'],
 
                 "from_user": from_user,
                 "from_user_name": email2nickname(from_user),
-                "from_user_work_no": from_alibaba_profile.work_no,
+                "from_user_work_no": from_user_dict['work_no'],
+                "from_user_department": from_user_dict['dept_name'],
+                "from_user_position": from_user_dict['post_name'],
 
                 "to_user": to_user,
                 "to_user_name": email2nickname(to_user),
-                "to_user_work_no": to_alibaba_profile.work_no,
+                "to_user_work_no": to_user_dict['work_no'],
+                "to_user_department": to_user_dict['dept_name'],
+                "to_user_position": to_user_dict['post_name'],
             }
-
-            if request.LANGUAGE_CODE == 'zh-cn':
-                info['operator_department'] = operator_alibaba_profile.dept_name or ''
-                info['operator_position'] = operator_alibaba_profile.post_name or ''
-                info['from_user_department'] = from_alibaba_profile.dept_name or ''
-                info['from_user_position'] = from_alibaba_profile.post_name or ''
-                info['to_user_department'] = to_alibaba_profile.dept_name or ''
-                info['to_user_position'] = to_alibaba_profile.post_name or ''
-            else:
-                info['operator_department'] = operator_alibaba_profile.dept_name_en or ''
-                info['operator_position'] = operator_alibaba_profile.post_name_en or ''
-                info['from_user_department'] = from_alibaba_profile.dept_name_en or ''
-                info['from_user_position'] = from_alibaba_profile.post_name_en or ''
-                info['to_user_department'] = to_alibaba_profile.dept_name_en or ''
-                info['to_user_position'] = to_alibaba_profile.post_name_en or ''
 
             owner_chain.append(info)
 
