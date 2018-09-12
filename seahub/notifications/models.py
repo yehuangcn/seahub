@@ -822,7 +822,7 @@ def add_share_repo_msg_cb(sender, **kwargs):
         # Titile: 您收到一份共享资料
         # Form:
         # 邀请人: 姓名(花名)
-        # 资料库名称: 这是一个资料库
+        # 文件库名称: 这是一个文件库
         # 发起时间: 2018-07-13 13:14:12
         # 消息系统: TeamFile云文件
         content_cn = {
@@ -836,7 +836,7 @@ def add_share_repo_msg_cb(sender, **kwargs):
                         "value": email2nickname(ccnet_email)
                     },
                     {
-                        "key": "资料库名称:",
+                        "key": "文件库名称:",
                         "value": "%s" % repo.name
                     },
                     {
@@ -921,28 +921,28 @@ def add_share_repo_to_group_msg_cb(sender, **kwargs):
 
         ccnet_email = from_profile.uid
 
-        # Titile: 您所在的群组收到一个资料库
+        # Titile: 您所在的团队收到一个文件库
         # Form:
         # 邀请人: 姓名(花名)
-        # 群组名称: 这是一个群组
-        # 资料库名称: 这是一个资料库
+        # 团队名称: 这是一个团队
+        # 文件库名称: 这是一个文件库
         # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
             "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
-                "title": "您所在的群组收到一个资料库",
+                "title": "您所在的团队收到一个文件库",
                 "form": [
                     {
                         "key": "邀请人:",
                         "value": email2nickname(ccnet_email)
                     },
                     {
-                        "key": "群组名称:",
+                        "key": "团队名称:",
                         "value": "%s" % group.group_name
                     },
                     {
-                        "key": "资料库名称:",
+                        "key": "文件库名称:",
                         "value": "%s" % repo.name
                     },
                     {
@@ -1030,24 +1030,24 @@ def grpmsg_added_cb(sender, **kwargs):
 
         ccnet_email = from_profile.uid
 
-        # Titile: 您所在的群组有一个新的评论
+        # Titile: 您所在的团队有一个新的评论
         # Form:
         # 评论人: 姓名(花名)
-        # 群组名称: 这是一个群组
+        # 团队名称: 这是一个团队
         # 评论内容: 这是一个评论
         # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
             "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
-                "title": "您所在的群组有一个新的评论",
+                "title": "您所在的团队有一个新的评论",
                 "form": [
                     {
                         "key": "评论人:",
                         "value": email2nickname(ccnet_email)
                     },
                     {
-                        "key": "群组名称:",
+                        "key": "团队名称:",
                         "value": "%s" % group.group_name
                     },
                     {
@@ -1072,7 +1072,7 @@ def grpmsg_added_cb(sender, **kwargs):
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
             "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
-                "title": "您所在的群组有一个新的评论",
+                "title": "您所在的团队有一个新的评论",
                 "form": [
                     {
                         "key": "Comment From:",
@@ -1154,23 +1154,23 @@ def add_user_to_group_cb(sender, **kwargs):
 
         ccnet_email = from_profile.uid
 
-        # Titile:您被邀请到了一个群组
+        # Titile:您被邀请到了一个团队
         # Form:
         # 邀请人: 姓名(花名)
-        # 群组名称: 这是一个群组
+        # 团队名称: 这是一个团队
         # 消息系统: TeamFile云文件
         content_cn = {
             "message_url": ALIBABA_DINGDING_TALK_URL % url,
             "head": {"bgcolor": "FFF17334", "text": get_site_name()},
             "body": {
-                "title": "您被邀请到了一个群组",
+                "title": "您被邀请到了一个团队",
                 "form": [
                     {
                         "key": "邀请人:",
                         "value": email2nickname(ccnet_email)
                     },
                     {
-                        "key": "群组名称:",
+                        "key": "团队名称:",
                         "value": "%s" % group.group_name
                     },
                     {
