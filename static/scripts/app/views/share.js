@@ -232,6 +232,7 @@ define([
             var $panel = $('#download-link-share');
             var $loadingTip = this.$('.loading-tip');
             var _this = this;
+            var hasShareLink = false;
 
             // check if downloadLink exists
             $.ajax({
@@ -246,8 +247,11 @@ define([
                     if (data.length == 1) {
                         var link_data = data[0];
                         _this.renderDownloadLink(link_data);
+                        hasShareLink = true;
                     } else {
-                        _this.$('#generate-download-link-form').removeClass('hide');
+                        if (_this.is_dir) {
+                            _this.$('#generate-download-link-form').removeClass('hide');
+                        }
                      }
                 },
                 error: function(xhr, textStatus, errorThrown) {
@@ -255,7 +259,9 @@ define([
                     $('.error', $panel).html(err_msg).show();
                 },
                 complete: function() {
-                    $loadingTip.hide();
+                    if (_this.is_dir) {
+                        $loadingTip.hide();
+                    }
                 }
             });
 
@@ -290,6 +296,12 @@ define([
                                 _this.$('#file-share-link-edit-only-radio').removeClass('hide');
                             }
                         }
+                        if (!hasShareLink) {
+                            _this.$('#generate-download-link-form').removeClass('hide');
+                        }
+                    },
+                    complete: function() {
+                        $loadingTip.hide();
                     }
                 });
             }
