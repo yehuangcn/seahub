@@ -1175,7 +1175,7 @@
 
         <div class="nav-con-tabs-content">
             <span class="loading-icon loading-tip"></span>
-            <% if (!repo_encrypted && can_generate_share_link) { %>
+            <% if (!repo_encrypted && can_generate_share_link && !is_dir) { %>
             <div id="download-link-share" class="tabs-panel">
                 <form id="generate-download-link-form" action="" class="hide">
 

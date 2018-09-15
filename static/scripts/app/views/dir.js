@@ -554,8 +554,7 @@ define([
                 // show 'share' or not
                 var can_share = false;
                 if (!dir.encrypted &&
-                    (app.pageOptions.can_generate_share_link ||
-                    app.pageOptions.can_generate_upload_link ||
+                    (app.pageOptions.can_generate_upload_link ||
                     dir.is_repo_owner || dir.is_admin) &&
                     (dir.user_perm == 'rw' || dir.user_perm == 'r')) {
                     can_share = true;
