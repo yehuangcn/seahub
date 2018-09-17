@@ -244,7 +244,6 @@ class Command(BaseCommand):
         messages = AlibabaMessageQueue.objects.filter(topic=ALIBABA_MESSAGE_TOPIC_LEAVE_FILE_HANDOVER)
 
         for message in messages:
-            logging.error('2342342')
 
             if message.lock_version == 1:
                 continue
@@ -255,17 +254,35 @@ class Command(BaseCommand):
             self.stdout.write("\n\nStart for message %s.\n" % message.id)
 
             try:
-                # get ccnet email
+                # get leave alibaba profile
                 leave_ccnet_email = get_leave_work_ccnet_email(message)
-                super_ccnet_email = get_super_work_ccnet_email(message)
-                if not leave_ccnet_email or not super_ccnet_email:
+
+                # leave NOT in alibaba profile
+                # mark exception
+                if not leave_ccnet_email:
+                    AlibabaMessageQueue.objects.mark_message_exception(message.id)
                     continue
 
+                # get leave ccnet email
                 leave_ccnet_user_obj = ccnet_api.get_emailuser(leave_ccnet_email)
+
+                # leave not in Seafile
                 if not leave_ccnet_user_obj:
+                    AlibabaMessageQueue.objects.mark_message_consumed(message.id)
                     continue
 
-                if ccnet_api.get_emailuser(super_ccnet_email):
+                # get super alibaba profile
+                super_ccnet_email = get_super_work_ccnet_email(message)
+
+                # super NOT in alibaba profile
+                # mark exception
+                if not super_ccnet_email:
+                    AlibabaMessageQueue.objects.mark_message_exception(message.id)
+                    continue
+
+                # super NOT in seafile
+                # create super ccnet user
+                if not ccnet_api.get_emailuser(super_ccnet_email):
                     ccnet_api.add_emailuser(super_ccnet_email,
                             UNUSABLE_PASSWORD, 0, 0)
 

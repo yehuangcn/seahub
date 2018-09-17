@@ -141,34 +141,41 @@ class AlibabaMessageQueueManager(models.Manager):
 
         try:
             message = self.get(id=message_id)
+            message.lock_version = 1
+            message.save(using=self._db)
+            return message
         except AlibabaMessageQueue.DoesNotExist:
             logger.error('Message %s does not exists' % message_id)
-
-        message.lock_version = 1
-        message.save(using=self._db)
-        return message
 
     def remove_lock(self, message_id):
 
         try:
             message = self.get(id=message_id)
+            message.lock_version = 0
+            message.save(using=self._db)
+            return message
         except AlibabaMessageQueue.DoesNotExist:
             logger.error('Message %s does not exists' % message_id)
-
-        message.lock_version = 0
-        message.save(using=self._db)
-        return message
 
     def mark_message_consumed(self, message_id):
 
         try:
             message = self.get(id=message_id)
+            message.is_consumed = 1
+            message.save(using=self._db)
+            return message
         except AlibabaMessageQueue.DoesNotExist:
             logger.error('Message %s does not exists' % message_id)
 
-        message.is_consumed = 1
-        message.save(using=self._db)
-        return message
+    def mark_message_exception(self, message_id):
+
+        try:
+            message = self.get(id=message_id)
+            message.is_consumed = 99
+            message.save(using=self._db)
+            return message
+        except AlibabaMessageQueue.DoesNotExist:
+            logger.error('Message %s does not exists' % message_id)
 
 
 class AlibabaMessageQueue(models.Model):
