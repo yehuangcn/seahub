@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.utils.http import urlquote
 from django.utils.html import escape
+from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.conf import settings as dj_settings
 from django.template.defaultfilters import filesizeformat
@@ -40,7 +41,7 @@ import seahub.settings as settings
 from seahub.settings import ENABLE_THUMBNAIL, THUMBNAIL_ROOT, \
     THUMBNAIL_DEFAULT_SIZE, SHOW_TRAFFIC, MEDIA_URL, ENABLE_VIDEO_THUMBNAIL
 from seahub.utils import check_filename_with_rename, EMPTY_SHA1, \
-    gen_block_get_url, TRAFFIC_STATS_ENABLED, get_user_traffic_stat,\
+    gen_block_get_url, TRAFFIC_STATS_ENABLED, get_user_traffic_by_month,\
     new_merge_with_no_conflict, get_commit_before_new_merge, \
     get_repo_last_modify, gen_file_upload_url, is_org_context, \
     get_file_type_and_ext, is_pro_version, normalize_dir_path, \
@@ -1119,14 +1120,23 @@ def space_and_traffic(request):
     traffic_stat = 0
     if TRAFFIC_STATS_ENABLED:
         # User's network traffic stat in this month
+        if is_org_context(request):
+            org_id = request.user.org.org_id
+        else:
+            org_id = -1
+
         try:
-            stat = get_user_traffic_stat(username)
+            stat = get_user_traffic_by_month(
+                username, now(), now(), org_id=org_id)[0]
+            op_types = ('sync_file_upload', 'sync_file_download',
+                        'web_file_upload', 'web_file_download',
+                        'link_file_upload', 'link_file_download'
+            )
+            for key in op_types:
+                traffic_stat += stat.get(key, 0)
+
         except Exception as e:
             logger.error(e)
-            stat = None
-
-        if stat:
-            traffic_stat = stat['file_view'] + stat['file_download'] + stat['dir_download']
 
     # payment url, TODO: need to remove from here.
     payment_url = ''

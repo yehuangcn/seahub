@@ -1182,28 +1182,43 @@ if EVENTS_CONFIG_FILE:
     HAS_FILE_SEARCH = check_search_enabled()
 
 TRAFFIC_STATS_ENABLED = False
-if EVENTS_CONFIG_FILE and hasattr(seafevents, 'get_user_traffic_stat'):
+if EVENTS_CONFIG_FILE and hasattr(seafevents, 'get_user_traffic_by_month'):
     TRAFFIC_STATS_ENABLED = True
-    def get_user_traffic_stat(username):
+
+    def get_user_traffic_by_month(username, start_mon, end_mon, org_id=-1):
         session = SeafEventsSession()
         try:
-            stat = seafevents.get_user_traffic_stat(session, username)
+            stat = seafevents.get_user_traffic_by_month(
+                session, username, start_mon, end_mon, org_id)
         finally:
             session.close()
         return stat
 
-    def get_user_traffic_list(month, start=0, limit=25):
+    def get_all_users_traffic_by_month(month, start=0, limit=25,
+                                       order_by='user', org_id=-1):
         session = SeafEventsSession()
         try:
-            stat = seafevents.get_user_traffic_list(session, month, start, limit)
+            stat = seafevents.get_all_users_traffic_by_month(
+                session, month, start, limit, order_by, org_id)
         finally:
             session.close()
         return stat
 
+    def get_all_orgs_traffic_by_month(month, start=0, limit=100,
+                                      order_by='org_id'):
+        session = SeafEventsSession()
+        try:
+            stat = seafevents.get_all_orgs_traffic_by_month(
+                session, month, start, limit, order_by)
+        finally:
+            session.close()
+        return stat
 else:
-    def get_user_traffic_stat(username):
+    def get_user_traffic_by_month():
         pass
-    def get_user_traffic_list():
+    def get_all_users_traffic_by_month():
+        pass
+    def get_all_orgs_traffic_by_month():
         pass
 
 def user_traffic_over_limit(username):
