@@ -157,11 +157,11 @@ def sys_statistic_traffic(request):
         current_page = 1
         per_page = 100
 
-    month = request.GET.get('month', '')
+    month = request.GET.get('month', timezone.now().strftime('%Y%m'))
     try:
         month_dt = datetime.datetime.strptime(month, '%Y%m')
     except ValueError:
-        month_dt = datetime.datetime.now()
+        month_dt = timezone.now()
 
     start = per_page * (current_page - 1)
     limit = per_page + 1
