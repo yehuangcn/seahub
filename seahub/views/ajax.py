@@ -41,11 +41,11 @@ import seahub.settings as settings
 from seahub.settings import ENABLE_THUMBNAIL, THUMBNAIL_ROOT, \
     THUMBNAIL_DEFAULT_SIZE, SHOW_TRAFFIC, MEDIA_URL, ENABLE_VIDEO_THUMBNAIL
 from seahub.utils import check_filename_with_rename, EMPTY_SHA1, \
-    gen_block_get_url, TRAFFIC_STATS_ENABLED, get_user_traffic_by_month,\
+    gen_block_get_url, TRAFFIC_STATS_ENABLED, \
     new_merge_with_no_conflict, get_commit_before_new_merge, \
     get_repo_last_modify, gen_file_upload_url, is_org_context, \
     get_file_type_and_ext, is_pro_version, normalize_dir_path, \
-    FILEEXT_TYPE_MAP
+    FILEEXT_TYPE_MAP, seafevents_api
 from seahub.utils.star import get_dir_starred_files
 from seahub.utils.file_types import IMAGE, VIDEO
 from seahub.utils.file_op import check_file_lock, ONLINE_OFFICE_LOCK_OWNER
@@ -1126,7 +1126,7 @@ def space_and_traffic(request):
             org_id = -1
 
         try:
-            stat = get_user_traffic_by_month(
+            stat = seafevents_api.get_user_traffic_by_month(
                 username, now(), now(), org_id=org_id)[0]
             op_types = ('sync_file_upload', 'sync_file_download',
                         'web_file_upload', 'web_file_download',

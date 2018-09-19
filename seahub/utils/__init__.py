@@ -1185,6 +1185,9 @@ TRAFFIC_STATS_ENABLED = False
 if EVENTS_CONFIG_FILE and hasattr(seafevents, 'get_user_traffic_by_month'):
     TRAFFIC_STATS_ENABLED = True
 
+    from seafevents import seafevents_api
+    seafevents_api.init(EVENTS_CONFIG_FILE)
+
     def get_user_traffic_by_month(username, start_mon, end_mon, org_id=-1):
         session = SeafEventsSession()
         try:
@@ -1194,32 +1197,8 @@ if EVENTS_CONFIG_FILE and hasattr(seafevents, 'get_user_traffic_by_month'):
             session.close()
         return stat
 
-    def get_all_users_traffic_by_month(month, start=0, limit=25,
-                                       order_by='user', org_id=-1):
-        session = SeafEventsSession()
-        try:
-            stat = seafevents.get_all_users_traffic_by_month(
-                session, month, start, limit, order_by, org_id)
-        finally:
-            session.close()
-        return stat
-
-    def get_all_orgs_traffic_by_month(month, start=0, limit=100,
-                                      order_by='org_id'):
-        session = SeafEventsSession()
-        try:
-            stat = seafevents.get_all_orgs_traffic_by_month(
-                session, month, start, limit, order_by)
-        finally:
-            session.close()
-        return stat
 else:
-    def get_user_traffic_by_month():
-        pass
-    def get_all_users_traffic_by_month():
-        pass
-    def get_all_orgs_traffic_by_month():
-        pass
+    seafevents_api = None       # TODO
 
 def user_traffic_over_limit(username):
     """Return ``True`` if user traffic over the limit, otherwise ``False``.

@@ -46,10 +46,10 @@ from seahub.role_permissions.utils import get_available_roles, \
 from seahub.role_permissions.models import AdminRole
 from seahub.two_factor.models import default_device
 from seahub.utils import IS_EMAIL_CONFIGURED, string2list, is_valid_username, \
-    is_pro_version, send_html_email, get_all_users_traffic_by_month, \
+    is_pro_version, send_html_email, \
     get_server_id, handle_virus_record, get_virus_record_by_id, \
     get_virus_record, FILE_AUDIT_ENABLED, get_max_upload_file_size, \
-    get_site_name, get_all_orgs_traffic_by_month
+    get_site_name, seafevents_api
 from seahub.utils.ip import get_remote_ip
 from seahub.utils.file_size import get_file_size_unit
 from seahub.utils.ldap import get_ldap_info
@@ -178,10 +178,10 @@ def sys_statistic_traffic(request):
         order_by = 'link_file_download_desc'
 
     if req_type == 'user':
-        traffic_info_list = get_all_users_traffic_by_month(
+        traffic_info_list = seafevents_api.get_all_users_traffic_by_month(
             month_dt, start, limit, order_by)
     else:
-        traffic_info_list = get_all_orgs_traffic_by_month(
+        traffic_info_list = seafevents_api.get_all_orgs_traffic_by_month(
             month_dt, start, limit, order_by)
 
     page_next = len(traffic_info_list) == limit
