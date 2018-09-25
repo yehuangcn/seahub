@@ -69,3 +69,10 @@ def datetime_to_timestamp(datetime_obj):
     local = utc_to_local(datetime_obj)
     time_diff = local - epoch
     return time_diff.seconds + (time_diff.days * 24 * 3600)
+
+def get_time_offset():
+    timezone_name = timezone.get_current_timezone_name()
+    offset = pytz.timezone(timezone_name).localize(datetime.datetime.now()).strftime('%z')
+    return offset[:3] + ':' + offset[3:]
+
+UTC_TIME_OFFSET = get_time_offset()

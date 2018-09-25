@@ -78,7 +78,8 @@ from seahub.api2.endpoints.admin.file_update import FileUpdate
 from seahub.api2.endpoints.admin.perm_audit import PermAudit
 from seahub.api2.endpoints.admin.sysinfo import SysInfo
 from seahub.api2.endpoints.admin.statistics import (
-    FileOperationsView, TotalStorageView, ActiveUsersView, SystemTrafficView
+    FileOperationsView, TotalStorageView, ActiveUsersView, SystemTrafficView, \
+    FileOperationsExcelView, TotalStorageExcelView, ActiveUsersExcelView, SystemTrafficExcelView, \
 )
 from seahub.api2.endpoints.admin.devices import AdminDevices
 from seahub.api2.endpoints.admin.device_errors import AdminDeviceErrors
@@ -103,7 +104,7 @@ from seahub.api2.endpoints.admin.users_batch import AdminUsersBatch
 from seahub.api2.endpoints.admin.operation_logs import AdminOperationLogs
 from seahub.api2.endpoints.admin.organizations import AdminOrganization
 from seahub.api2.endpoints.admin.org_users import AdminOrgUsers, AdminOrgUser
-from seahub.api2.endpoints.admin.org_stats import AdminOrgStatsTraffic
+from seahub.api2.endpoints.admin.org_stats import AdminOrgStatsTraffic, AdminOrgStatsTrafficExcel
 from seahub.api2.endpoints.admin.logo import AdminLogo
 from seahub.api2.endpoints.admin.favicon import AdminFavicon
 from seahub.api2.endpoints.admin.license import AdminLicense
@@ -325,6 +326,12 @@ urlpatterns = [
     url(r'^api/v2.1/admin/statistics/active-users/$', ActiveUsersView.as_view(), name='api-v2.1-admin-statistics-active-users'),
     url(r'^api/v2.1/admin/statistics/system-traffic/$', SystemTrafficView.as_view(), name='api-v2.1-admin-statistics-system-traffic'),
 
+    url(r'^api/v2.1/admin/statistics/file-operations/excel/$', FileOperationsExcelView.as_view(), name='api-v2.1-admin-statistics-file-operations-excel'),
+    url(r'^api/v2.1/admin/statistics/total-storage/excel/$', TotalStorageExcelView.as_view(), name='api-v2.1-admin-statistics-total-storage-excel'),
+    url(r'^api/v2.1/admin/statistics/active-users/excel/$', ActiveUsersExcelView.as_view(), name='api-v2.1-admin-statistics-active-users-excel'),
+    url(r'^api/v2.1/admin/statistics/system-traffic/excel/$', SystemTrafficExcelView.as_view(), name='api-v2.1-admin-statistics-system-traffic-excel'),
+
+
     ## admin::users
     url(r'^api/v2.1/admin/users/$', AdminUsers.as_view(), name='api-v2.1-admin-users'),
     # [^...] Matches any single character not in brackets
@@ -398,6 +405,7 @@ urlpatterns = [
     url(r'^api/v2.1/admin/organizations/(?P<org_id>\d+)/users/$', AdminOrgUsers.as_view(), name='api-v2.1-admin-org-users'),
     url(r'^api/v2.1/admin/organizations/(?P<org_id>\d+)/users/(?P<email>[^/]+)/$', AdminOrgUser.as_view(), name='api-v2.1-admin-org-user'),
     url(r'^api/v2.1/admin/organizations/(?P<org_id>\d+)/statistics/traffic/$', AdminOrgStatsTraffic.as_view(), name='api-v2.1-admin-org-stats-traffic'),
+    url(r'^api/v2.1/admin/organizations/(?P<org_id>\d+)/statistics/traffic/excel/$', AdminOrgStatsTrafficExcel.as_view(), name='api-v2.1-admin-org-stats-traffic-excel'),
 
     ## admin::logo
     url(r'^api/v2.1/admin/logo/$', AdminLogo.as_view(), name='api-v2.1-admin-logo'),
