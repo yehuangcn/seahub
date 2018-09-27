@@ -30,6 +30,14 @@ from seahub.settings import ENABLE_WATERMARK
 
 logger = logging.getLogger(__name__)
 
+WOPI_ACCESS_TOKEN_CACHE_VALUE = {
+    'request_user': '',
+    'repo_id': '',
+    'file_path': '',
+    'obj_id': '',
+    'can_edit': '',
+    'can_download': '',
+}
 
 def generate_access_token_cache_key(token):
     """ Generate cache key for WOPI access token
@@ -44,7 +52,7 @@ def get_file_info_by_token(token):
     """
 
     key = generate_access_token_cache_key(token)
-    return cache.get(key) if cache.get(key) else {}
+    return cache.get(key) if cache.get(key) else WOPI_ACCESS_TOKEN_CACHE_VALUE
 
 def generate_discovery_cache_key(name, ext):
     """ Generate cache key for office web app hosting discovery
@@ -195,12 +203,21 @@ def get_wopi_dict(request_user, repo_id, file_path,
         'can_edit': action_name == 'edit',
         'can_download': can_download,
     }
+    WOPI_ACCESS_TOKEN_CACHE_VALUE.update(user_repo_path_info)
 
     # collobora office only allowed alphanumeric and _
     uid = uuid.uuid4()
     access_token = uid.hex
     key = generate_access_token_cache_key(access_token)
-    cache.set(key, user_repo_path_info, WOPI_ACCESS_TOKEN_EXPIRATION)
+    if not cache.set(key, WOPI_ACCESS_TOKEN_CACHE_VALUE, WOPI_ACCESS_TOKEN_EXPIRATION):
+        logger.error('Set wopi cache failed, key: %s' % key)
+    else:
+        logger.error('Set wopi cache success, key: %s' % key)
+
+    logger.error('WOPI_ACCESS_TOKEN_CACHE_VALUE: %s' %
+            WOPI_ACCESS_TOKEN_CACHE_VALUE)
+    logger.error('WOPI_ACCESS_TOKEN_EXPIRATION: %s' %
+            WOPI_ACCESS_TOKEN_EXPIRATION)
 
     # access_token_ttl property tells office web app
     # when access token expires

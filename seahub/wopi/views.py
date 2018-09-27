@@ -86,6 +86,9 @@ def access_token_check(func):
                                 content_type=json_content_type)
 
         info_dict = get_file_info_by_token(token)
+        logger.error('Get wopi cache, key: wopi_access_token_%s' % token)
+        logger.error('value: %s' % info_dict)
+
         request_user = info_dict['request_user']
         repo_id = info_dict['repo_id']
         file_path= info_dict['file_path']
