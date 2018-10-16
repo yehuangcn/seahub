@@ -1,6 +1,8 @@
 #!/bin/bash
 : ${PYTHON=python}
 
+''
+
 set -e
 if [[ ${TRAVIS} != "" ]]; then
     set -x
