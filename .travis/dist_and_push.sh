@@ -2,6 +2,7 @@
 : ${PYTHON=python}
 
 ''
+''
 
 set -e
 if [[ ${TRAVIS} != "" ]]; then
