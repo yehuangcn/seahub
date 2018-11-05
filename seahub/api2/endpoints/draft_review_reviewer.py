@@ -1,4 +1,6 @@
 # Copyright (c) 2012-2016 Seafile Ltd.
+import posixpath
+
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -85,7 +87,7 @@ class DraftReviewReviewerView(APIView):
                     'error_msg': error_msg
                 })
                 continue
-            
+
             uuid = r.origin_file_uuid
             origin_file_path = posixpath.join(uuid.parent_path, uuid.filename)
             # check perm
