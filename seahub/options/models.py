@@ -280,7 +280,7 @@ class UserOptionsManager(models.Manager):
 
 class UserOptions(models.Model):
     email = LowerCaseCharField(max_length=255, db_index=True)
-    option_key = models.CharField(max_length=50)
+    option_key = models.CharField(max_length=50, db_index=True)
     option_val = models.CharField(max_length=50)
 
     objects = UserOptionsManager()
