@@ -98,6 +98,16 @@ class MainPanel extends Component {
     });
   }
 
+  updateViewListParam = (dirent, paramKey, paramValue) => {
+    let newDirentList = this.state.direntList.map(item => {
+      if (item.id === dirent.id) {
+        item[paramKey] = paramValue;
+      }
+      return item;
+    });
+    this.setState({direnList: newDirentList});
+  }
+
   onMenuClick = () => {
     this.props.onMenuClick();
   }
@@ -309,6 +319,7 @@ class MainPanel extends Component {
                   onItemCopy={this.props.onMainItemCopy}
                   onItemDetails={this.onItemDetails}
                   updateViewList={this.updateViewList}
+                  updateViewListParam={this.updateViewListParam}
                   isDirentListLoading={this.state.isDirentListLoading}
                   currentRepo={this.state.currentRepo}
                   isRepoOwner={this.state.isRepoOwner}
