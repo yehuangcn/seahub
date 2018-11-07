@@ -77,6 +77,8 @@
 .sf2-icon-confirm:before {content:"\e01e"}
 .sf2-icon-cancel:before {content:"\e01f"}
 .sf2-icon-tag-manager:before {content:"\e015"}
+.sf2-icon-minus:before {content:"\e01c"}
+
 
 /* common class and element style*/
 a { color:#eb8205; }

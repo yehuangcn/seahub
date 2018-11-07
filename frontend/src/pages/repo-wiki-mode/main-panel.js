@@ -58,6 +58,7 @@ class MainPanel extends Component {
       isRepoOwner: false,
       showFileUploadList: false,
       uploadFileList: [],
+      totalProgress: '0%'
     };
   }
 
@@ -212,7 +213,54 @@ class MainPanel extends Component {
   updateUploadFileList = (file) => {
     this.setState({
       showFileUploadList: true,
-      uploadFileList: [...this.state.uploadFileList, file],
+      uploadFileList: [...this.state.uploadFileList, {id: file.uniqueIdentifier, file: file, progress: '0%'}],
+    });
+  }
+
+  onFileProgress = (file, message) => {
+    let progress = Math.round(message * 100) + '%';
+    let newUploadFileList = this.state.uploadFileList.map(item => {
+      if (item.id === file.uniqueIdentifier) {
+        item.progress = progress;
+      }
+      return item;
+    });
+    this.setState({
+      uploadFileList: newUploadFileList
+    });
+  }
+
+  onUploaderCancel = (cancelItem) => {
+    let uploadFileList = this.state.uploadFileList.filter(item => {
+      return item.id !== cancelItem.id;
+    })
+    let newUploadFileList = uploadFileList.map(item => {
+      let progress = Math.round(item.file.progress() * 100) + '%';
+      item.progress = progress;
+      return item;
+    });
+    this.setState({
+      uploadFileList: newUploadFileList
+    });
+  }
+
+  onProgress = (message) => {
+    let totalProgress = Math.round(message * 100) + '%';
+    this.setState({
+      totalProgress: totalProgress
+    })
+  }
+
+  onMinimizeUploader = () => {
+    this.setState({
+      showFileUploadList: false
+    });
+  }
+
+  onCloseUploader = () => {
+    this.setState({
+      showFileUploadList: false,
+      uploadFileList: [], 
     });
   }
 
@@ -283,7 +331,9 @@ class MainPanel extends Component {
                       filePath={this.props.filePath} 
                       isDirectory={false}
                       updateUploadFileList={this.updateUploadFileList}
-                      />
+                      onFileProgress={this.onFileProgress}
+                      onProgress={this.onProgress}
+                    />
                   </li>
                   <li className="dropdown-item">
                     <FileUploader 
@@ -381,6 +431,10 @@ class MainPanel extends Component {
         {this.state.showFileUploadList &&
           <FileUploaderListView 
             uploadFileList={this.state.uploadFileList}
+            onUploaderCancel={this.onUploaderCancel}
+            totalProgress={this.state.totalProgress}
+            onMinimizeUploader={this.onMinimizeUploader}
+            onCloseUploader={this.onCloseUploader}
           />
         }
       </div>
