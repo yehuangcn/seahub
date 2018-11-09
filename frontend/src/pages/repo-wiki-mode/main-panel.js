@@ -217,6 +217,10 @@ class MainPanel extends Component {
     this.uploader.onFolderUploader();
   }
 
+  onFileSuccess = (file) => {
+
+  }
+
   render() {
     let filePathList = this.props.filePath.split('/');
     let nodePath = '';
