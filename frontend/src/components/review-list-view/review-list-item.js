@@ -12,9 +12,9 @@ const propTypes = {
 function Reviewers(props) {
   return (
     <div>
-      {props.items.map((item, index) => (
-        <img key={index} className="avatar avatar-sm" alt={item.username} src={item.avatar_url}>
-        </img>
+      <img className="avatar avatar-sm" alt={props.author.username} src={props.author.avatar_url} />
+      {props.reviewers.map((item, index) => (
+        <img key={index} className="avatar avatar-sm" alt={item.username} src={item.avatar_url} />
       ))}
     </div>  
   );
@@ -68,7 +68,7 @@ class ReviewListItem extends React.Component {
         <td className="name a-simulate" style={{width: '26%'}} onClick={this.onReviewsClick}>{fileName}</td>
         <td className='library' style={{width: '20%'}}>{item.draft_origin_repo_name}</td>
         <td className="update" style={{width: '20%'}}>{localTime}</td>
-        <td className="update" style={{width: '20%'}}><Reviewers items={item.related_users} /></td>
+        <td className="update" style={{width: '20%'}}><Reviewers reviewers={item.reviewers} author={item.author}/></td>
         <td className="menu-toggle"></td>
       </tr>
     );

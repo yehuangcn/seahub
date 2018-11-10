@@ -42,29 +42,29 @@ class DraftReviewsView(APIView):
 
         # Get review and related users
         for r in DraftReview.objects.filter(creator=username):
-            related_users = []
+            reviewers = []
             for x in r.reviewreviewer_set.all():
                 reviewer = user_to_dict(x.reviewer, request=request, avatar_size=avatar_size)
-                related_users.append(reviewer)
+                reviewers.append(reviewer)
 
             author = user_to_dict(username, request=request, avatar_size=avatar_size)
-            related_users.append(author)
 
             review = r.to_dict()
-            review.update({'related_users': related_users})
+            review.update({'author': author})
+            review.update({'reviewers': reviewers})
             data.append(review)
 
         for x in ReviewReviewer.objects.filter(reviewer=username):
-            related_users = []
+            reviewers = []
             for i in x.review_id.reviewreviewer_set.all():
                 reviewer = user_to_dict(i.reviewer, request=request, avatar_size=avatar_size)
-                related_users.append(reviewer)
+                reviewers.append(reviewer)
 
             author = user_to_dict(x.review_id.creator, request=request, avatar_size=avatar_size)
-            related_users.append(author)
 
             review = x.review_id.to_dict()
-            review.update({'related_users': related_users})
+            review.update({'author': author})
+            review.update({'reviewers': reviewers})
             data.append(review)
 
         return Response({'data': data})
