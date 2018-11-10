@@ -34,9 +34,9 @@ class DraftReviewsView(APIView):
 
         # format user result
         try:
-            avatar_size = int(request.GET.get('avatar_size', 32))
+            avatar_size = int(request.GET.get('avatar_size', 64))
         except ValueError:
-            avatar_size = 32
+            avatar_size = 64
 
         data = []
 
