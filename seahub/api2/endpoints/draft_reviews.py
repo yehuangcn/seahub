@@ -13,7 +13,7 @@ from django.db import IntegrityError
 from seaserv import seafile_api
 from seahub.api2.authentication import TokenAuthentication
 from seahub.api2.throttling import UserRateThrottle
-from seahub.api2.utils import api_error
+from seahub.api2.utils import api_error, user_to_dict
 from seahub.constants import PERMISSION_READ_WRITE
 from seahub.views import check_folder_permission
 
@@ -31,8 +31,41 @@ class DraftReviewsView(APIView):
         """List all user draft review
         """
         username = request.user.username
-        data = [x.to_dict() for x in DraftReview.objects.filter(creator=username)]
-        data += [x.review_id.to_dict() for x in ReviewReviewer.objects.filter(reviewer=username)]
+
+        # format user result
+        try:
+            avatar_size = int(request.GET.get('avatar_size', 32))
+        except ValueError:
+            avatar_size = 32
+
+        data = []
+
+        # Get review and related users
+        for r in DraftReview.objects.filter(creator=username):
+            related_users = []
+            for x in r.reviewreviewer_set.all():
+                reviewer = user_to_dict(x.reviewer, request=request, avatar_size=avatar_size)
+                related_users.append(reviewer)
+
+            author = user_to_dict(username, request=request, avatar_size=avatar_size)
+            related_users.append(author)
+
+            review = r.to_dict()
+            review.update({'related_users': related_users})
+            data.append(review)
+
+        for x in ReviewReviewer.objects.filter(reviewer=username):
+            related_users = []
+            for i in x.review_id.reviewreviewer_set.all():
+                reviewer = user_to_dict(i.reviewer, request=request, avatar_size=avatar_size)
+                related_users.append(reviewer)
+
+            author = user_to_dict(x.review_id.creator, request=request, avatar_size=avatar_size)
+            related_users.append(author)
+
+            review = x.review_id.to_dict()
+            review.update({'related_users': related_users})
+            data.append(review)
 
         return Response({'data': data})
 

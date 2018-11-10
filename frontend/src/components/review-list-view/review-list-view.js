@@ -67,6 +67,7 @@ class ReviewListView extends React.Component {
               <th style={{width: '26%'}}>{gettext('Name')}</th>
               <th style={{width: '20%'}}>{gettext('Library')}</th>
               <th style={{width: '20%'}}>{gettext('Last Update')}</th>
+              <th style={{width: '20%'}}>{gettext('Author & Reviewers')}</th>
               <th style={{width: '10%'}}></th>
             </tr>
           </thead>
